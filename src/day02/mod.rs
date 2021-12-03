@@ -60,25 +60,31 @@ impl Runner for Day {
     }
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {
-        let (mut h, mut v) = (0, 0);
-        input.into_iter().for_each(|m| match m {
-            Movement::Forward(m) => h += m,
-            Movement::Down(m) => v += *m as isize,
-            Movement::Up(m) => v -= *m as isize,
+        let (h, v) = input.into_iter().fold((0, 0), |(mut h, mut v), m| {
+            match m {
+                Movement::Forward(m) => h += m,
+                Movement::Down(m) => v += *m as isize,
+                Movement::Up(m) => v -= *m as isize,
+            };
+            (h, v)
         });
         Ok(h * v as usize)
     }
 
     fn part2(input: &Self::Input) -> Result<Self::Output> {
-        let (mut h, mut v, mut aim) = (0, 0, 0);
-        input.into_iter().for_each(|m| match m {
-            Movement::Forward(m) => {
-                h += m;
-                v += aim * m;
-            }
-            Movement::Down(m) => aim += *m,
-            Movement::Up(m) => aim -= *m,
-        });
+        let (h, v, _) = input
+            .into_iter()
+            .fold((0, 0, 0), |(mut h, mut v, mut aim), m| {
+                match m {
+                    Movement::Forward(m) => {
+                        h += m;
+                        v += aim * m;
+                    }
+                    Movement::Down(m) => aim += *m,
+                    Movement::Up(m) => aim -= *m,
+                };
+                (h, v, aim)
+            });
         Ok(h * v as usize)
     }
 }
