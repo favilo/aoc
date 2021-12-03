@@ -1,0 +1,32 @@
+[package]
+name = "aoc2021"
+version = "0.1.0"
+authors = ["Kevin Oberlies <favilo@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.34"
+chrono = "0.4.19"
+fern = { version = "0.6.0", features = ["colored"] }
+itertools = "0.10.1"
+log = "0.4.14"
+nom = "7.1.0"
+once_cell = "1.8.0"
+serde = "1.0.117"
+serde_derive = "1.0.117"
+
+[dev-dependencies]
+criterion = "0.3.3"
+
+[[bench]]
+name = "criterion"
+harness = false
+
+[profile.release]
+opt-level = 3
+debug = true
+
+[features]
+inputs = []
