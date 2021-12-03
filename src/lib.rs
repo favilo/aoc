@@ -31,13 +31,18 @@ pub mod day03;
 // pub mod day20;
 // pub mod day21;
 
-pub fn run() -> Result<Duration> {
-    let mut total_time = day01::Day::run()?;
-    total_time += day02::Day::run()?;
-    total_time += day03::Day::run()?;
+macro_rules! run_days {
+    ($day:ident, $($days:ident),+) => {
+        pub fn run() -> Result<Duration> {
+            let mut total_time = $day::Day::run()?;
+            $(total_time += $days::Day::run()?;)+
 
-    Ok(total_time)
+            Ok(total_time)
+        }
+    };
 }
+
+run_days!(day01, day02, day03);
 
 pub trait Runner {
     type Input;
