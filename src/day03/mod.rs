@@ -14,12 +14,12 @@ fn most_common_bit(input: &<Day as Runner>::Input, bit: u8) -> u8 {
 }
 
 #[inline]
-fn filter_whats_left(left: &mut Vec<usize>, digit: u8, bit: usize) {
+fn filter_whats_left(left: &mut <Day as Runner>::Input, digit: u8, bit: usize) {
     *left = left
         .iter()
         .copied()
         .filter(|num| ((*num >> digit) & 1) == bit)
-        .collect::<Vec<usize>>();
+        .collect::<<Day as Runner>::Input>();
 }
 
 pub struct Day;
