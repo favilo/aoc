@@ -3,7 +3,7 @@ use anyhow::Result;
 use crate::Runner;
 
 #[inline]
-fn most_common_bit(input: &<Day03 as Runner>::Input, bit: u8) -> u8 {
+fn most_common_bit(input: &<Day as Runner>::Input, bit: u8) -> u8 {
     let len = input.len();
     let ones: usize = input.iter().map(|num| (num >> bit) & 1).sum();
     if ones >= (len - ones) {
@@ -22,8 +22,8 @@ fn filter_whats_left(left: &mut Vec<usize>, digit: u8, bit: usize) {
         .collect::<Vec<usize>>();
 }
 
-pub struct Day03;
-impl Runner for Day03 {
+pub struct Day;
+impl Runner for Day {
     type Input = Vec<usize>;
     type Output = usize;
 

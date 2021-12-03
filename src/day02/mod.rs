@@ -2,9 +2,9 @@ use anyhow::Result;
 use nom::{
     branch::alt,
     bytes::complete::tag,
-    character::{complete::digit1, streaming::multispace0},
-    combinator::map,
-    sequence::{delimited, tuple},
+    character::complete::{digit1, multispace0},
+    combinator::{map, value},
+    sequence::{delimited, terminated, tuple},
     IResult,
 };
 
@@ -18,27 +18,29 @@ pub enum Movement {
 }
 
 fn parse_movement(input: &str) -> IResult<&str, Movement> {
-    let (input, (dir, num)): (_, (&str, usize)) = tuple((
-        delimited(
-            multispace0,
-            alt((tag("forward"), tag("up"), tag("down"))),
-            multispace0,
-        ),
-        map(digit1, |s: &str| s.parse().unwrap()),
-    ))(input)?;
-    Ok((
-        input,
-        match dir {
-            "forward" => Movement::Forward(num),
-            "up" => Movement::Up(num),
-            "down" => Movement::Down(num),
-            &_ => unreachable!(),
-        },
-    ))
+    let (input, ((), num)): (_, ((), Movement)) = delimited(
+        multispace0,
+        alt((
+            tuple((
+                value((), terminated(tag("forward"), multispace0)),
+                map(digit1, |s: &str| Movement::Forward(s.parse().unwrap())),
+            )),
+            tuple((
+                value((), terminated(tag("up"), multispace0)),
+                map(digit1, |s: &str| Movement::Up(s.parse().unwrap())),
+            )),
+            tuple((
+                value((), terminated(tag("down"), multispace0)),
+                map(digit1, |s: &str| Movement::Down(s.parse().unwrap())),
+            )),
+        )),
+        multispace0,
+    )(input)?;
+    Ok((input, num))
 }
 
-pub struct Day02;
-impl Runner for Day02 {
+pub struct Day;
+impl Runner for Day {
     type Input = Vec<Movement>;
     type Output = usize;
 
@@ -94,10 +96,10 @@ mod tests {
                        down 8
                        forward 2"#;
 
-        let input = Day02::get_input(input)?;
+        let input = Day::get_input(input)?;
         println!("{:?}", input);
-        assert_eq!(150, Day02::part1(&input)?);
-        assert_eq!(900, Day02::part2(&input)?);
+        assert_eq!(150, Day::part1(&input)?);
+        assert_eq!(900, Day::part2(&input)?);
         Ok(())
     }
 }

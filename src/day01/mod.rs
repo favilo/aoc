@@ -3,9 +3,9 @@ use itertools::Itertools;
 
 use crate::Runner;
 
-pub struct Day01;
+pub struct Day;
 
-impl Runner for Day01 {
+impl Runner for Day {
     type Input = Vec<i32>;
     type Output = i32;
 
