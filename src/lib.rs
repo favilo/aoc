@@ -10,19 +10,30 @@ use std::{
 use anyhow::Result;
 
 macro_rules! run_days {
-    ($day:ident, $($days:ident),+) => {
+    ($day:ident = $id:expr, $($days:ident = $ids:expr),*) => {
         pub mod $day;
-        $(pub mod $days;)+
-        pub fn run() -> Result<Duration> {
-            let mut total_time = $day::Day::run()?;
-            $(total_time += $days::Day::run()?;)+
+        $(pub mod $days;)*
+        pub fn run(days: Vec<usize>) -> Result<Duration> {
+            let mut total_time = Duration::ZERO;
+            if days.is_empty() {
+                total_time += $day::Day::run()?;
+                $(total_time += $days::Day::run()?;)+
+            } else {
+                for day in days {
+                    total_time += match day {
+                        $id => $day::Day::run()?,
+                        $($ids => $days::Day::run()?,)*
+                        _ => panic!("Invalid day passed"),
+                    }
+                }
+            }
 
             Ok(total_time)
         }
     };
 }
 
-run_days!(day01, day02, day03);
+run_days!(day01 = 1, day02 = 2, day03 = 3, day04 = 4);
 
 pub trait Runner {
     type Input;

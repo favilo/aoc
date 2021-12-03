@@ -1,6 +1,6 @@
 use anyhow::Result;
-use fern::colors::Color;
-use fern::colors::ColoredLevelConfig;
+use clap::{App, Arg};
+use fern::colors::{Color, ColoredLevelConfig};
 
 fn setup_logger() -> Result<()> {
     fern::Dispatch::new()
@@ -25,8 +25,26 @@ fn setup_logger() -> Result<()> {
 }
 
 fn main() -> Result<()> {
+    let matches = App::new("AOC2021")
+        .version("2021")
+        .author("Favil Orbedios <favilo@gmail.com>")
+        .arg(
+            Arg::with_name("days")
+                .short("d")
+                .long("day")
+                .value_name("day")
+                .takes_value(true)
+                .multiple(true),
+        )
+        .get_matches();
+    let days: Vec<usize> = matches
+        .values_of("days")
+        .unwrap_or_default()
+        .map(|s| usize::from_str_radix(s, 10).unwrap())
+        .collect();
     setup_logger()?;
-    let time = aoc2021::run()?;
+
+    let time = aoc2021::run(days)?;
     log::info!("Total Time: {:?}", time);
 
     Ok(())
