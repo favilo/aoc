@@ -19,7 +19,7 @@ fn filter_whats_left(left: &mut <Day as Runner>::Input, digit: u8, bit: usize) {
         .iter()
         .copied()
         .filter(|num| ((*num >> digit) & 1) == bit)
-        .collect::<<Day as Runner>::Input>();
+        .collect();
 }
 
 pub struct Day;
