@@ -33,7 +33,7 @@ macro_rules! run_days {
     };
 }
 
-run_days!(day01 = 1, day02 = 2, day03 = 3, day04 = 4);
+run_days!(day01 = 1, day02 = 2, day03 = 3, day04 = 4, day05 = 5);
 
 pub trait Runner {
     type Input;

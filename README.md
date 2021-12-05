@@ -38,4 +38,8 @@ day03/part2             time:   [12.419 us 12.470 us 12.524 us]
 day04/get_input         time:   [106.09 us 106.75 us 107.51 us]
 day04/part1             time:   [404.21 us 405.72 us 407.40 us]
 day04/part2             time:   [3.1264 ms 3.1580 ms 3.1930 ms]
+
+day05/get_input         time:   [23.174 us 23.240 us 23.318 us]
+day05/part1             time:   [1.5619 ms 1.5722 ms 1.5853 ms]
+day05/part2             time:   [2.6088 ms 2.6514 ms 2.6987 ms]
 ```
