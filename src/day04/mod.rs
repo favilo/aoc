@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 
 use anyhow::Result;
-use ndarray::{Array2, Axis};
 use nom::{
     bytes::complete::{tag, take_until},
     character::complete::{digit1, multispace0, newline},
@@ -18,36 +17,45 @@ pub struct Day;
 
 type Coord = (usize, usize);
 
-#[derive(Default, Debug, Clone)]
+#[derive(Debug, Clone)]
 struct Board {
-    grid: Array2<usize>,
-    marked: HashSet<Coord>,
+    // grid: Array2<usize>,
+    grid: [(bool, Option<Coord>); 100],
+    rows: [usize; 5],
+    cols: [usize; 5],
+}
+
+impl Default for Board {
+    fn default() -> Self {
+        Self {
+            grid: [(false, None); 100],
+            rows: Default::default(),
+            cols: Default::default(),
+        }
+    }
 }
 
 impl Board {
     fn mark_number(&mut self, n: usize) {
-        if let Some(pos) = self.grid.iter().position(|i| i == &n) {
-            self.marked.insert((pos / 5, pos % 5));
+        if let (m, Some((x, y))) = self.grid[n] {
+            self.grid[n].0 = true;
+            if !m {
+            self.cols[x] += 1;
+            self.rows[y] += 1;
+            }
         }
     }
 
     fn is_solved(&self) -> bool {
-        (0..5).any(|x| (0..5).all(|y| self.marked.contains(&(x, y))))
-            || (0..5).any(|y| (0..5).all(|x| self.marked.contains(&(x, y))))
+        self.rows.iter().any(|&row| row == 5) || self.cols.iter().any(|&col| col == 5)
     }
 
     fn score(&self) -> usize {
         self.grid
-            .axis_iter(Axis(0))
+            .iter()
             .enumerate()
-            .map(|(x, column)| {
-                column
-                    .iter()
-                    .enumerate()
-                    .filter_map(|(y, c)| (!self.marked.contains(&(x, y))).then(|| c))
-                    .sum::<usize>()
-            })
-            .sum()
+            .filter(|(_, (marked, p))| !marked & p.is_some())
+            .fold(0, |a, (idx, _)| a + idx)
     }
 }
 
@@ -145,15 +153,18 @@ fn parse_board(input: &str) -> IResult<&str, Board, VerboseError<&str>> {
             ),
         ),
     )(input)?;
-    let rows = rows.into_iter().flatten().collect();
-
-    let grid = Array2::from_shape_vec((5, 5), rows).unwrap();
+    let mut grid = [(false, None); 100];
+    rows.into_iter().enumerate().for_each(|(x, cols)| {
+        cols.into_iter().enumerate().for_each(|(y, val)| {
+            grid[val].1 = Some((x, y));
+        })
+    });
 
     Ok((
         input,
         Board {
             grid,
-            marked: Default::default(),
+            ..Default::default()
         },
     ))
 }
