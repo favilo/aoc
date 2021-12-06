@@ -39,19 +39,19 @@ impl Runner for Day {
 }
 
 fn update_state(v: &mut [usize; 9]) {
-    *v = v
-        .iter()
-        .copied()
-        .enumerate()
-        .fold([0; 9], |mut v: [usize; 9], (idx, c): (usize, usize)| {
-            if idx == 0 {
-                v[8] += c;
-                v[6] += c;
-            } else {
-                v[idx - 1] += c;
-            }
-            v
-        })
+    *v =
+        v.iter()
+            .copied()
+            .enumerate()
+            .fold([0; 9], |mut v: [usize; 9], (idx, c): (usize, usize)| {
+                if idx == 0 {
+                    v[8] += c;
+                    v[6] += c;
+                } else {
+                    v[idx - 1] += c;
+                }
+                v
+            })
 }
 
 #[cfg(test)]
