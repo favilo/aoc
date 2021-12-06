@@ -11,10 +11,16 @@ use crate::Runner;
 
 pub type Point = (usize, usize);
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum Type {
+    Straight,
+    Diag,
+}
+
 pub struct Day;
 
 impl Runner for Day {
-    type Input = Vec<String>;
+    type Input = Vec<(Type, Point)>;
     type Output = usize;
 
     fn day() -> usize {
@@ -22,49 +28,37 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input> {
-        Ok(input.lines().map(ToOwned::to_owned).collect())
+        Ok(input
+            .lines()
+            .map(|l| parse_line(l, true))
+            .map(Result::unwrap)
+            .map(|t| t.1)
+            .flatten()
+            .collect::<Self::Input>())
     }
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {
-        let lines = input
+        let mut grid = Array2::<usize>::zeros((1000, 1000));
+        input
             .iter()
-            .map(|l| parse_line(l, false))
-            .map(Result::unwrap)
-            .map(|t| t.1)
-            .collect::<Vec<Vec<Point>>>();
-        let (max_x, max_y) = lines
-            .iter()
-            .flatten()
             .copied()
-            .fold((0, 0), |(a0, a1), (x, y)| (max(a0, x), max(a1, y)));
-        let mut grid = Array2::<usize>::zeros((max_x + 1, max_y + 1));
-        lines.iter().flatten().copied().for_each(|(x, y)| {
-            grid[(x, y)] += 1usize;
-        });
+            .filter_map(|t| (t.0 == Type::Straight).then(|| t.1))
+            .for_each(|p| {
+                *grid.get_mut(p).unwrap() += 1usize;
+            });
         Ok(grid.into_iter().filter(|n| *n > 1usize).count())
     }
 
     fn part2(input: &Self::Input) -> Result<Self::Output> {
-        let lines = input
-            .iter()
-            .map(|l| parse_line(l, true))
-            .map(Result::unwrap)
-            .map(|t| t.1)
-            .collect::<Vec<Vec<Point>>>();
-        let (max_x, max_y) = lines
-            .iter()
-            .flatten()
-            .copied()
-            .fold((0, 0), |(a0, a1), (x, y)| (max(a0, x), max(a1, y)));
-        let mut grid = Array2::zeros((max_x + 1, max_y + 1));
-        lines.iter().flatten().copied().for_each(|(x, y)| {
+        let mut grid = Array2::zeros((1000, 1000));
+        input.iter().copied().map(|t| t.1).for_each(|(x, y)| {
             grid[(x, y)] += 1usize;
         });
         Ok(grid.into_iter().filter(|n: &usize| *n > 1usize).count())
     }
 }
 
-fn parse_line(input: &str, diag: bool) -> IResult<&str, Vec<Point>> {
+fn parse_line(input: &str, diag: bool) -> IResult<&str, Vec<(Type, Point)>> {
     let number = |input| -> IResult<&str, usize> {
         map(digit1, |s| usize::from_str_radix(s, 10).unwrap())(input)
     };
@@ -80,9 +74,13 @@ fn parse_line(input: &str, diag: bool) -> IResult<&str, Vec<Point>> {
     Ok((
         input,
         if x1 == x2 {
-            (min(y1, y2)..=max(y1, y2)).map(|y| (x1, y)).collect()
+            (min(y1, y2)..=max(y1, y2))
+                .map(|y| (Type::Straight, (x1, y)))
+                .collect()
         } else if y1 == y2 {
-            (min(x1, x2)..=max(x1, x2)).map(|x| (x, y1)).collect()
+            (min(x1, x2)..=max(x1, x2))
+                .map(|x| (Type::Straight, (x, y1)))
+                .collect()
         } else {
             if diag {
                 let xs: Vec<_> = if x1 > x2 {
@@ -95,7 +93,7 @@ fn parse_line(input: &str, diag: bool) -> IResult<&str, Vec<Point>> {
                 } else {
                     (y1..=y2).collect()
                 };
-                zip(xs, ys).collect()
+                zip(xs, ys).map(|p| (Type::Diag, p)).collect()
             } else {
                 vec![]
             }
