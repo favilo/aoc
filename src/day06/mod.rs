@@ -1,47 +1,54 @@
-use std::ops::{Index, IndexMut};
-
 use anyhow::Result;
 
 use crate::Runner;
 
 pub struct Day;
 
-#[derive(Default, Debug, Clone)]
-pub struct Ring([usize; 9], usize);
+#[cfg(feature = "day06_ring")]
+mod ring {
+    use std::ops::{Index, IndexMut};
 
-impl Ring {
-    fn advance(&mut self) {
-        self.1 += 1;
-        self.1 %= 9;
+    #[derive(Default, Debug, Clone)]
+    pub struct Ring([usize; 9], usize);
+
+    impl Ring {
+        pub fn advance(&mut self) {
+            self.1 += 1;
+            self.1 %= 9;
+        }
     }
-}
 
-impl Index<usize> for Ring {
-    type Output = usize;
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.0[(index + self.1) % 9]
+    impl Index<usize> for Ring {
+        type Output = usize;
+        fn index(&self, index: usize) -> &Self::Output {
+            &self.0[(index + self.1) % 9]
+        }
     }
-}
 
-impl IndexMut<usize> for Ring {
-    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
-        &mut self.0[(index + self.1) % 9]
+    impl IndexMut<usize> for Ring {
+        fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+            &mut self.0[(index + self.1) % 9]
+        }
     }
-}
 
-impl<'a> IntoIterator for &'a Ring {
-    type Item = &'a usize;
+    impl<'a> IntoIterator for &'a Ring {
+        type Item = &'a usize;
 
-    type IntoIter = std::iter::Chain<std::slice::Iter<'a, usize>, std::slice::Iter<'a, usize>>;
+        type IntoIter = std::iter::Chain<std::slice::Iter<'a, usize>, std::slice::Iter<'a, usize>>;
 
-    fn into_iter(self) -> Self::IntoIter {
-        let (first, last) = self.0.split_at(self.1);
-        last.into_iter().chain(first.into_iter())
+        fn into_iter(self) -> Self::IntoIter {
+            let (first, last) = self.0.split_at(self.1);
+            last.into_iter().chain(first.into_iter())
+        }
     }
 }
 
 impl Runner for Day {
-    type Input = Ring;
+    #[cfg(feature = "day06_ring")]
+    type Input = ring::Ring;
+
+    #[cfg(not(feature = "day06_ring"))]
+    type Input = [usize; 9];
     type Output = usize;
 
     fn day() -> usize {
@@ -53,7 +60,7 @@ impl Runner for Day {
             .trim()
             .split(",")
             .map(|s| usize::from_str_radix(s, 10).unwrap())
-            .fold(Ring::default(), |mut v, i| {
+            .fold(Default::default(), |mut v, i| {
                 v[i] += 1;
                 v
             }))
@@ -67,7 +74,7 @@ impl Runner for Day {
     }
 
     fn part2(input: &Self::Input) -> Result<Self::Output> {
-        let mut v: Ring = input.to_owned();
+        let mut v = input.to_owned();
         (0..256).for_each(|_| update_state(&mut v));
 
         Ok(v.into_iter().sum())
@@ -75,27 +82,24 @@ impl Runner for Day {
 }
 
 #[cfg(feature = "day06_ring")]
-fn update_state(ring: &mut Ring) {
+fn update_state(ring: &mut ring::Ring) {
     ring.advance();
     ring[6] += ring[8];
 }
 
 #[cfg(not(feature = "day06_ring"))]
-fn update_state(ring: &mut Ring) {
-    *ring = Ring(
-        ring.0.iter().copied().enumerate().rev().fold(
-            [0; 9],
-            |mut v: [usize; 9], (idx, c): (usize, usize)| {
-                if idx == 0 {
-                    v[8] = c;
-                    v[6] += c;
-                } else {
-                    v[idx - 1] = c;
-                }
-                v
-            },
-        ),
-        0,
+fn update_state(ring: &mut [usize; 9]) {
+    *ring = ring.iter().copied().enumerate().rev().fold(
+        [0; 9],
+        |mut v: [usize; 9], (idx, c): (usize, usize)| {
+            if idx == 0 {
+                v[8] = c;
+                v[6] += c;
+            } else {
+                v[idx - 1] = c;
+            }
+            v
+        },
     );
 }
 
