@@ -88,19 +88,12 @@ fn update_state(ring: &mut ring::Ring) {
 }
 
 #[cfg(not(feature = "day06_ring"))]
-fn update_state(ring: &mut [usize; 9]) {
-    *ring = ring.iter().copied().enumerate().rev().fold(
-        [0; 9],
-        |mut v: [usize; 9], (idx, c): (usize, usize)| {
-            if idx == 0 {
-                v[8] = c;
-                v[6] += c;
-            } else {
-                v[idx - 1] = c;
-            }
-            v
-        },
-    );
+fn update_state(slice: &mut [usize; 9]) {
+    let mut new = [0; 9];
+    new[..8].copy_from_slice(&slice[1..]);
+    new[8] = slice[0];
+    new[6] += slice[0];
+    *slice = new;
 }
 
 #[cfg(test)]
