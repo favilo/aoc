@@ -47,3 +47,24 @@ day06/get_input         time:   [4.4970 us 4.5724 us 4.6608 us]
 day06/part1             time:   [8.4918 ns 8.7548 ns 9.1158 ns]
 day06/part2             time:   [41.288 ns 42.183 ns 43.355 ns]
 ```
+
+## Failed experiments
+
+### Day 6
+
+I tried to be more clever than the optimizer, but failed. If you use add
+`--features day06_ring` you can see the awful timings I got when attempting to
+use a ring buffer to update in place. It _works_, but it ended up being about 3000% slower
+
+```
+day06/get_input         time:   [4.2848 us 4.3215 us 4.3654 us]
+                        change: [-3.9853% -2.3302% -0.6116%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+day06/part1             time:   [262.28 ns 266.21 ns 270.56 ns]
+                        change: [+3033.7% +3134.4% +3236.0%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+day06/part2             time:   [836.93 ns 852.07 ns 869.67 ns]
+                        change: [+1851.4% +1892.5% +1933.2%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+
+```

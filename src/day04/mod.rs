@@ -40,8 +40,8 @@ impl Board {
         if let (m, Some((x, y))) = self.grid[n] {
             self.grid[n].0 = true;
             if !m {
-            self.cols[x] += 1;
-            self.rows[y] += 1;
+                self.cols[x] += 1;
+                self.rows[y] += 1;
             }
         }
     }

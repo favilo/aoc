@@ -32,4 +32,4 @@ opt-level = 3
 debug = true
 
 [features]
-inputs = []
+day06_ring = []

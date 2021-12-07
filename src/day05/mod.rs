@@ -30,7 +30,7 @@ impl Runner for Day {
     fn get_input(input: &str) -> Result<Self::Input> {
         Ok(input
             .lines()
-            .map(|l| parse_line(l, true))
+            .map(parse_line)
             .map(Result::unwrap)
             .map(|t| t.1)
             .flatten()
@@ -58,7 +58,7 @@ impl Runner for Day {
     }
 }
 
-fn parse_line(input: &str, diag: bool) -> IResult<&str, Vec<(Type, Point)>> {
+fn parse_line(input: &str) -> IResult<&str, Vec<(Type, Point)>> {
     let number = |input| -> IResult<&str, usize> {
         map(digit1, |s| usize::from_str_radix(s, 10).unwrap())(input)
     };
@@ -82,21 +82,17 @@ fn parse_line(input: &str, diag: bool) -> IResult<&str, Vec<(Type, Point)>> {
                 .map(|x| (Type::Straight, (x, y1)))
                 .collect()
         } else {
-            if diag {
-                let xs: Vec<_> = if x1 > x2 {
-                    (x2..=x1).rev().collect()
-                } else {
-                    (x1..=x2).collect()
-                };
-                let ys: Vec<_> = if y1 > y2 {
-                    (y2..=y1).rev().collect()
-                } else {
-                    (y1..=y2).collect()
-                };
-                zip(xs, ys).map(|p| (Type::Diag, p)).collect()
+            let xs: Vec<_> = if x1 > x2 {
+                (x2..=x1).rev().collect()
             } else {
-                vec![]
-            }
+                (x1..=x2).collect()
+            };
+            let ys: Vec<_> = if y1 > y2 {
+                (y2..=y1).rev().collect()
+            } else {
+                (y1..=y2).collect()
+            };
+            zip(xs, ys).map(|p| (Type::Diag, p)).collect()
         },
     ))
 }
