@@ -33,11 +33,13 @@ harness = false
 
 [profile.release]
 opt-level = 3
-debug = true
+debug = 1
+incremental = true
 
 [profile.bench]
 opt-level = 3
 debug=true
+lto = "thin"
 
 [features]
 day06_ring = []
