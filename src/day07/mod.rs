@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use crate::Runner;
+use crate::{utils::parse_int, Runner};
 
 pub struct Day;
 
@@ -13,7 +13,7 @@ fn median(l: &[usize]) -> usize {
     let len = l.len();
     let mid = len / 2;
     if len % 2 == 0 {
-        mean(&l[(mid - 1)..(mid + 1)]).round() as _
+        (l[(mid - 1)] + l[mid]) / 2
     } else {
         l[mid]
     }
@@ -28,10 +28,13 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input> {
+        // Only good for valid data
         Ok(input
             .trim()
-            .split(",")
-            .map(|s| s.parse().unwrap())
+            .as_bytes()
+            .split(|&c| ',' as u8 == c)
+            // .map(|s| s.parse().unwrap())
+            .map(parse_int)
             .collect())
     }
 

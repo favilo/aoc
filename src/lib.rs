@@ -9,6 +9,8 @@ use std::{
 
 use anyhow::Result;
 
+mod utils;
+
 macro_rules! run_days {
     ($day:ident = $id:expr, $($days:ident = $ids:expr),*) => {
         pub mod $day;

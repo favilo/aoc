@@ -56,14 +56,13 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input> {
-        Ok(input
-            .trim()
-            .split(",")
-            .map(|s| usize::from_str_radix(s, 10).unwrap())
-            .fold(Default::default(), |mut v, i| {
+        Ok(input.trim().split(",").map(|s| s.parse().unwrap()).fold(
+            Default::default(),
+            |mut v, i: usize| {
                 v[i] += 1;
                 v
-            }))
+            },
+        ))
     }
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {

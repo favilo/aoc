@@ -3,6 +3,7 @@ use std::fs::read_to_string;
 use criterion::{criterion_group, criterion_main, Criterion};
 
 use aoc2021::Runner;
+use pprof::{criterion::Output, flamegraph::Options};
 
 macro_rules! days {
     ($day:ident) => {
@@ -31,9 +32,11 @@ macro_rules! benches {
     ($day:ident, $($days:ident),+) => {
         days! { $day, $($days),+ }
         criterion_group!(
-            benches,
-            $day,
-            $($days),+
+            name = benches;
+            config = custom();
+            targets = $day,
+                $($days),+
+
         );
 
         criterion_main!(benches);
@@ -41,3 +44,13 @@ macro_rules! benches {
 }
 
 benches! { day01, day02, day03, day04, day05, day06, day07 }
+
+fn custom() -> Criterion {
+    let mut options = Options::default();
+    options.flame_chart = true;
+
+    Criterion::default().with_profiler(pprof::criterion::PProfProfiler::new(
+        1000,
+        Output::Flamegraph(Some(options)),
+    ))
+}

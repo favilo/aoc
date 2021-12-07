@@ -7,7 +7,7 @@ use nom::{
     bytes::complete::tag, character::complete::digit1, combinator::map, sequence::tuple, IResult,
 };
 
-use crate::Runner;
+use crate::{utils::parse_int, Runner};
 
 pub type Point = (usize, usize);
 
@@ -29,7 +29,9 @@ impl Runner for Day {
 
     fn get_input(input: &str) -> Result<Self::Input> {
         Ok(input
-            .lines()
+            .as_bytes()
+            .split(|&c| c == '\n' as u8 || c == '\r' as u8)
+            .filter(|b| b != b"")
             .map(parse_line)
             .map(Result::unwrap)
             .map(|t| t.1)
@@ -58,17 +60,15 @@ impl Runner for Day {
     }
 }
 
-fn parse_line(input: &str) -> IResult<&str, Vec<(Type, Point)>> {
-    let number = |input| -> IResult<&str, usize> {
-        map(digit1, |s| usize::from_str_radix(s, 10).unwrap())(input)
-    };
+fn parse_line(input: &[u8]) -> IResult<&[u8], Vec<(Type, Point)>> {
+    let number = |input| -> IResult<&[u8], usize> { map(digit1, |s: &[u8]| parse_int(s))(input) };
     let (input, (x1, _, y1, _, x2, _, y2)) = tuple((
         number,
-        tag(","),
+        tag(b","),
         number,
-        tag(" -> "),
+        tag(b" -> "),
         number,
-        tag(","),
+        tag(b","),
         number,
     ))(input)?;
     Ok((

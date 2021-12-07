@@ -40,7 +40,7 @@ fn main() -> Result<()> {
     let days: Vec<usize> = matches
         .values_of("days")
         .unwrap_or_default()
-        .map(|s| usize::from_str_radix(s, 10).unwrap())
+        .map(|s| s.parse().unwrap())
         .collect();
     setup_logger()?;
 

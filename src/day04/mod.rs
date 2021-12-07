@@ -125,11 +125,10 @@ impl Runner for Day {
 
 fn parse_bingo<'a>(input: &'a str) -> IResult<&'a str, Bingo, VerboseError<&'a str>> {
     let (input, line) = terminated(take_until("\n"), many1(newline))(input)?;
-    let (line, numbers): (&str, Vec<usize>) = map(many1(terminated(digit1, opt(tag(",")))), |v| {
-        v.into_iter()
-            .map(|s| usize::from_str_radix(s, 10).unwrap())
-            .collect()
-    })(line)?;
+    let (line, numbers): (&str, Vec<usize>) =
+        map(many1(terminated(digit1, opt(tag(",")))), |v: Vec<&str>| {
+            v.into_iter().map(|s| s.parse::<usize>().unwrap()).collect()
+        })(line)?;
     assert_eq!("", line);
     let (input, boards) = parse_boards(input)?;
     Ok((input, Bingo { numbers, boards }))
@@ -148,7 +147,7 @@ fn parse_board(input: &str) -> IResult<&str, Board, VerboseError<&str>> {
             5,
             delimited(
                 multispace0,
-                map(digit1, |s| usize::from_str_radix(s, 10).unwrap()),
+                map(digit1, |s: &str| s.parse().unwrap()),
                 multispace0,
             ),
         ),
