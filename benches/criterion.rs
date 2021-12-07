@@ -40,4 +40,4 @@ macro_rules! benches {
     };
 }
 
-benches! { day01, day02, day03, day04, day05, day06 }
+benches! { day01, day02, day03, day04, day05, day06, day07 }

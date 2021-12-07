@@ -46,6 +46,10 @@ day05/part2             time:   [2.6088 ms 2.6514 ms 2.6987 ms]
 day06/get_input         time:   [4.4970 us 4.5724 us 4.6608 us]
 day06/part1             time:   [8.4918 ns 8.7548 ns 9.1158 ns]
 day06/part2             time:   [41.288 ns 42.183 ns 43.355 ns]
+
+day07/get_input         time:   [21.460 us 22.199 us 22.930 us]
+day07/part1             time:   [337.52 ns 342.77 ns 348.73 ns]
+day07/part2             time:   [1.5778 us 1.6030 us 1.6431 us]
 ```
 
 ## Failed experiments
