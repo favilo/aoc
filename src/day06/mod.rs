@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use crate::Runner;
+use crate::{utils::parse_int, Runner};
 
 pub struct Day;
 
@@ -56,13 +56,15 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input> {
-        Ok(input.trim().split(",").map(|s| s.parse().unwrap()).fold(
-            Default::default(),
-            |mut v, i: usize| {
+        Ok(input
+            .trim()
+            .as_bytes()
+            .split(|&c| c == ',' as u8)
+            .map(|s| parse_int(s))
+            .fold(Default::default(), |mut v, i: usize| {
                 v[i] += 1;
                 v
-            },
-        ))
+            }))
     }
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {

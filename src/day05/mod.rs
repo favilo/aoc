@@ -20,7 +20,8 @@ pub enum Type {
 pub struct Day;
 
 impl Runner for Day {
-    type Input = Vec<(Type, Point)>;
+    // type Input = Vec<(Type, Point)>;
+    type Input = Array2<usize>;
     type Output = usize;
 
     fn day() -> usize {
@@ -28,7 +29,7 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input> {
-        Ok(input
+        let input = input
             .as_bytes()
             .split(|&c| c == '\n' as u8 || c == '\r' as u8)
             .filter(|b| b != b"")
@@ -36,27 +37,35 @@ impl Runner for Day {
             .map(Result::unwrap)
             .map(|t| t.1)
             .flatten()
-            .collect::<Self::Input>())
+            .collect::<Vec<_>>();
+        let mut grid = Array2::<usize>::zeros((1000, 1000));
+        input.iter().copied().for_each(|(t, p)| {
+            match t {
+                Type::Straight => {
+                    let n = grid.get_mut(p).unwrap();
+                    *n += 1;
+                }
+                Type::Diag => {
+                    let n = grid.get_mut(p).unwrap();
+                    *n += 1 << 32;
+                }
+            };
+        });
+        Ok(grid)
     }
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {
-        let mut grid = Array2::<usize>::zeros((1000, 1000));
-        input
-            .iter()
-            .copied()
-            .filter_map(|t| (t.0 == Type::Straight).then(|| t.1))
-            .for_each(|p| {
-                *grid.get_mut(p).unwrap() += 1usize;
-            });
-        Ok(grid.into_iter().filter(|n| *n > 1usize).count())
+        Ok(input
+            .into_iter()
+            .filter(|&n| (n & 0xffff_ffff) > 1usize)
+            .count())
     }
 
     fn part2(input: &Self::Input) -> Result<Self::Output> {
-        let mut grid = Array2::zeros((1000, 1000));
-        input.iter().copied().map(|t| t.1).for_each(|(x, y)| {
-            grid[(x, y)] += 1usize;
-        });
-        Ok(grid.into_iter().filter(|n: &usize| *n > 1usize).count())
+        Ok(input
+            .into_iter()
+            .filter(|&n| (n & 0xffff_ffff + ((n >> 32) & 0xffff_ffff)) > 1usize)
+            .count())
     }
 }
 
