@@ -29,7 +29,8 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input> {
-        let input = input
+        let mut grid = Array2::<usize>::zeros((1000, 1000));
+        input
             .as_bytes()
             .split(|&c| c == '\n' as u8 || c == '\r' as u8)
             .filter(|b| b != b"")
@@ -37,20 +38,18 @@ impl Runner for Day {
             .map(Result::unwrap)
             .map(|t| t.1)
             .flatten()
-            .collect::<Vec<_>>();
-        let mut grid = Array2::<usize>::zeros((1000, 1000));
-        input.iter().copied().for_each(|(t, p)| {
-            match t {
-                Type::Straight => {
-                    let n = grid.get_mut(p).unwrap();
-                    *n += 1;
-                }
-                Type::Diag => {
-                    let n = grid.get_mut(p).unwrap();
-                    *n += 1 << 32;
-                }
-            };
-        });
+            .for_each(|(t, p)| {
+                match t {
+                    Type::Straight => {
+                        let n = grid.get_mut(p).unwrap();
+                        *n += 1;
+                    }
+                    Type::Diag => {
+                        let n = grid.get_mut(p).unwrap();
+                        *n += 1 << 32;
+                    }
+                };
+            });
         Ok(grid)
     }
 
