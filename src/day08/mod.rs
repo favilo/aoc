@@ -3,19 +3,18 @@ use nom::{
     bytes::complete::tag,
     character::complete::{alpha1, multispace0},
     combinator::map,
-    error::{convert_error, VerboseError},
     multi::many1,
     sequence::{terminated, tuple},
-    Finish, IResult,
+    IResult,
 };
 
 use crate::Runner;
 
 pub struct Day;
 
-fn bitset(input: &str) -> IResult<&str, u8, VerboseError<&str>> {
-    map(terminated(alpha1, multispace0), |s: &str| {
-        s.bytes().fold(0, |a, b| a | (1 << (b - 'a' as u8)))
+fn bitset(input: &[u8]) -> IResult<&[u8], u8> {
+    map(terminated(alpha1, multispace0), |s: &[u8]| {
+        s.iter().fold(0, |a, b| a | (1 << (b - 'a' as u8)))
     })(input)
 }
 
@@ -48,8 +47,8 @@ fn first_bit(set: u8) -> Option<usize> {
 }
 
 #[inline]
-fn bits(set: u8) -> Vec<usize> {
-    (0..7).filter(|b| set >> b & 1 == 1).collect()
+fn bits(set: u8) -> impl Iterator<Item = usize> {
+    (0..7).filter(move |b| set >> b & 1 == 1)
 }
 
 fn to_letter(bit: usize) -> char {
@@ -103,7 +102,6 @@ fn decode_segments(keys: &[u8], values: &[u8]) -> usize {
 impl BitSet {
     fn decode_digit(&self, v: u8) -> usize {
         let pattern = bits(v)
-            .iter()
             .map(|bit| {
                 self.0
                     .iter()
@@ -252,12 +250,12 @@ impl std::fmt::Debug for BitSet {
     }
 }
 
-fn parse_line(input: &str) -> IResult<&str, (Vec<u8>, Vec<u8>), VerboseError<&str>> {
+fn parse_line(input: &[u8]) -> IResult<&[u8], (Vec<u8>, Vec<u8>)> {
     let (input, (key, value)) = tuple((
-        terminated(many1(bitset), tag("| ")),
+        terminated(many1(bitset), tag(b"| ")),
         terminated(many1(bitset), multispace0),
     ))(input)?;
-    assert_eq!("", input);
+    assert_eq!(b"", input);
     Ok((input, (key, value)))
 }
 
@@ -272,14 +270,8 @@ impl Runner for Day {
     fn get_input(input: &str) -> Result<Self::Input> {
         Ok(input
             .lines()
-            .map(|l| (l, parse_line(l)))
-            .map(|(l, r)| {
-                if r.is_err() {
-                    println!("{}", convert_error(l, r.finish().err().unwrap()));
-                    panic!()
-                }
-                r
-            })
+            .map(str::as_bytes)
+            .map(parse_line)
             .map(Result::unwrap)
             .map(|t| t.1)
             .collect())
