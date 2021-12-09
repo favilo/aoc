@@ -73,8 +73,7 @@ impl Runner for Day {
 }
 
 fn parse_line(input: &[u8]) -> IResult<&[u8], Vec<(Type, Point)>> {
-    let number =
-        |input| -> IResult<&[u8], usize> { map(digit1, |s: &[u8]| parse_int::<usize>(s))(input) };
+    let number = |input| -> IResult<&[u8], usize> { map(digit1, |s: &[u8]| parse_int(s))(input) };
     let (input, (x1, _, y1, _, x2, _, y2)) = tuple((
         number,
         tag(b","),
