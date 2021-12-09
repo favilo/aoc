@@ -1,27 +1,26 @@
-use std::{collections::HashSet, ops::Mul};
+use std::{
+    collections::{BinaryHeap, HashSet},
+    ops::Mul,
+};
 
 use anyhow::Result;
+use itertools::Itertools;
 use ndarray::Array2;
 use nom::{
     character::complete::{multispace0, one_of},
     combinator::map,
-    error::{convert_error, VerboseError},
     multi::many1,
     sequence::terminated,
-    Finish, IResult,
+    IResult,
 };
 
 use crate::{utils::parse_int, Runner};
 
-fn parse_input<'a>(input: &'a str) -> IResult<&'a str, Vec<usize>, VerboseError<&str>> {
+fn parse_input<'a>(input: &'a [u8]) -> IResult<&'a [u8], Vec<usize>> {
     let r = terminated(
         many1(map(one_of("0123456789"), |s| parse_int(&[s as u8]))),
         multispace0,
     )(input);
-    if r.is_err() {
-        println!("{}", convert_error(input, r.finish().err().unwrap()));
-        panic!()
-    }
     r
 }
 
@@ -38,15 +37,17 @@ impl Runner for Day {
     fn get_input(input: &str) -> Result<Self::Input> {
         let width = input.lines().next().unwrap().len();
         let height = input.lines().count();
-        let v = input
+        let mut v = input
             .lines()
+            .map(str::as_bytes)
             .map(parse_input)
             .map(Result::unwrap)
             .map(|t| t.1)
             .map(Vec::into_iter)
-            .flatten()
-            .collect::<Vec<_>>();
-        Ok(Array2::from_shape_vec((height, width), v).unwrap())
+            .flatten();
+        Ok(Array2::from_shape_fn((height, width), |_| {
+            v.next().unwrap()
+        }))
     }
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {
@@ -56,10 +57,14 @@ impl Runner for Day {
     fn part2(input: &Self::Input) -> Result<Self::Output> {
         let mut lows = low_points(input)
             .map(|low| basin_size(input, low.0))
-            .collect::<Vec<_>>();
-        lows.sort();
+            .collect::<BinaryHeap<_>>();
 
-        Ok(lows[lows.len() - 3..].into_iter().fold(1, Mul::mul))
+        let lows = [
+            lows.pop().unwrap(),
+            lows.pop().unwrap(),
+            lows.pop().unwrap(),
+        ];
+        Ok(lows.into_iter().fold1(Mul::mul).unwrap())
     }
 }
 
@@ -83,16 +88,11 @@ fn basin_size(array: &Array2<usize>, low: (usize, usize)) -> usize {
 fn low_points<'a>(input: &'a Array2<usize>) -> impl Iterator<Item = ((usize, usize), usize)> + 'a {
     input
         .indexed_iter()
-        .map(|(idx, v)| (idx, v, neighbors(idx)))
-        .map(|(idx, v, neigh)| {
-            (
-                idx,
-                v,
-                neigh.map(|n| input.get(n)).flatten().collect::<Vec<_>>(),
-            )
+        .map(|(idx, v)| (idx, v, neighbors(idx).map(|n| input.get(n)).flatten()))
+        .filter_map(|(idx, v, mut n)| {
+            let all: bool = n.all(|o| -> bool { v < &&o });
+            all.then(|| (idx, *v))
         })
-        .filter(|(_, v, n)| n.into_iter().all(|o| v < o))
-        .map(|v| (v.0, *v.1))
 }
 
 fn neighbors(idx: (usize, usize)) -> impl Iterator<Item = (usize, usize)> {
