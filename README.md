@@ -55,9 +55,9 @@ day08/get_input         time:   [71.718 us 71.898 us 72.098 us]
 day08/part1             time:   [518.46 ns 522.44 ns 528.77 ns]
 day08/part2             time:   [65.264 us 65.405 us 65.563 us]
 
-day09/get_input         time:   [152.61 us 152.68 us 152.77 us]
-day09/part1             time:   [74.291 us 74.320 us 74.347 us]
-day09/part2             time:   [1.2507 ms 1.2519 ms 1.2533 ms]
+day09/get_input         time:   [150.64 us 150.76 us 150.87 us]
+day09/part1             time:   [73.486 us 73.519 us 73.554 us]
+day09/part2             time:   [311.25 us 315.14 us 319.01 us]                        ^[
 ```
 
 ## Failed experiments
