@@ -23,37 +23,38 @@ cargo bench
 ## Timings
 
 ```
-day01/get_input         time:   [45.686 us 45.940 us 46.212 us]
-day01/part1             time:   [1.1418 us 1.1446 us 1.1476 us]
-day01/part2             time:   [2.7954 us 2.8091 us 2.8235 us]
+day01/get_input         time:   [30.165 us 30.207 us 30.255 us]
+day01/part1             time:   [711.06 ns 712.68 ns 714.55 ns]
+day01/part2             time:   [2.3112 us 2.3178 us 2.3255 us]
 
-day02/get_input         time:   [56.037 us 56.204 us 56.364 us]
-day02/part1             time:   [924.83 ns 931.67 ns 939.51 ns]
-day02/part2             time:   [782.38 ns 785.07 ns 787.92 ns]
+day02/get_input         time:   [42.592 us 42.651 us 42.718 us]
+day02/part1             time:   [545.94 ns 548.03 ns 550.17 ns]
+day02/part2             time:   [729.97 ns 731.44 ns 733.11 ns]
 
-day03/get_input         time:   [31.327 us 31.367 us 31.414 us]
-day03/part1             time:   [1.9537 us 1.9623 us 1.9725 us]
-day03/part2             time:   [12.419 us 12.470 us 12.524 us]
+day03/get_input         time:   [23.079 us 23.122 us 23.171 us]
+day03/part1             time:   [737.94 ns 739.46 ns 741.72 ns]
+day03/part2             time:   [8.1633 us 8.1777 us 8.1946 us]
 
-day04/get_input         time:   [82.035 us 82.721 us 83.506 us]
-day04/part1             time:   [23.411 us 23.556 us 23.717 us]
-day04/part2             time:   [115.25 us 115.92 us 116.63 us]
+day04/get_input         time:   [74.034 us 74.188 us 74.374 us]
+day04/part1             time:   [19.244 us 19.329 us 19.427 us]
+day04/part2             time:   [90.903 us 91.201 us 91.569 us]
 
-day05/get_input         time:   [1.4970 ms 1.5167 ms 1.5422 ms]
-day05/part1             time:   [251.89 us 255.34 us 259.45 us]
-day05/part2             time:   [314.62 us 318.04 us 321.68 us]
+day05/get_input         time:   [875.77 us 879.41 us 883.73 us]
+day05/part1             time:   [152.17 us 152.95 us 153.97 us]
+day05/part2             time:   [206.94 us 216.63 us 227.91 us]
 
-day06/get_input         time:   [4.4970 us 4.5724 us 4.6608 us]
-day06/part1             time:   [8.4918 ns 8.7548 ns 9.1158 ns]
-day06/part2             time:   [41.288 ns 42.183 ns 43.355 ns]
+day06/get_input         time:   [1.8628 us 1.8722 us 1.8821 us]
+day06/part1             time:   [6.4909 ns 6.5098 ns 6.5312 ns]
+day06/part2             time:   [30.811 ns 30.918 ns 31.045 ns]
 
-day07/get_input         time:   [21.460 us 22.199 us 22.930 us]
-day07/part1             time:   [337.52 ns 342.77 ns 348.73 ns]
-day07/part2             time:   [1.5778 us 1.6030 us 1.6431 us]
+day07/get_input         time:   [4.3000 us 4.3099 us 4.3220 us]
+day07/part1             time:   [114.43 ns 114.95 ns 115.53 ns]
+day07/part2             time:   [673.07 ns 676.99 ns 680.80 ns]
 
-day08/get_input         time:   [88.286 us 89.875 us 91.697 us]
-day08/part1             time:   [850.67 ns 862.94 ns 881.19 ns]
-day08/part2             time:   [83.331 us 84.875 us 86.878 us]
+day08/get_input         time:   [71.718 us 71.898 us 72.098 us]
+day08/part1             time:   [518.46 ns 522.44 ns 528.77 ns]
+day08/part2             time:   [65.264 us 65.405 us 65.563 us]
+
 ```
 
 ## Failed experiments
