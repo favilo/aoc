@@ -47,7 +47,6 @@ impl Runner for Day {
 
         let epsilon = (!gamma as usize) & 0b1111_1111_1111;
         let answer = gamma * epsilon;
-        assert_eq!(1071734, answer);
         Ok(answer)
     }
 
@@ -78,7 +77,6 @@ impl Runner for Day {
             })
             .unwrap();
         let answer = oxygen * co2;
-        assert_eq!(6124992, answer);
         Ok(answer)
     }
 }
