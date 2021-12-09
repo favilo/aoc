@@ -11,6 +11,8 @@ use anyhow::Result;
 
 mod utils;
 
+const YEAR: usize = 2021;
+
 macro_rules! run_days {
     ($day:ident = $id:expr, $($days:ident = $ids:expr),*) => {
         pub mod $day;
@@ -59,7 +61,7 @@ pub trait Runner {
             format!(" : {}", comment)
         };
         log::info!("Day {}{}\n", Self::day(), comment);
-        let input = read_to_string(format!("input/2021/day{:02}.txt", Self::day()))?;
+        let input = read_to_string(format!("input/{}/day{:02}.txt", YEAR, Self::day()))?;
         let now = Instant::now();
         let input = Self::get_input(&input)?;
         let elapsed_i = now.elapsed();

@@ -13,6 +13,7 @@ use nom::{
     sequence::terminated,
     IResult,
 };
+use rayon::iter::{ParallelBridge, ParallelIterator};
 
 use crate::{utils::parse_int, Runner};
 
@@ -51,11 +52,15 @@ impl Runner for Day {
     }
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {
-        Ok(low_points(input).map(|(_, v)| v as usize + 1).sum())
+        Ok(low_points(input)
+            .par_bridge()
+            .map(|(_, v)| v as usize + 1)
+            .sum())
     }
 
     fn part2(input: &Self::Input) -> Result<Self::Output> {
         let mut lows = low_points(input)
+            .par_bridge()
             .map(|low| basin_size(input, low.0))
             .collect::<BinaryHeap<_>>();
 
