@@ -46,7 +46,7 @@ impl Runner for Day {
                     }
                     Type::Diag => {
                         let n = grid.get_mut(p).unwrap();
-                        *n += 1 << 32;
+                        *n += 0x1_0000_0000;
                     }
                 };
             });
@@ -63,13 +63,18 @@ impl Runner for Day {
     fn part2(input: &Self::Input) -> Result<Self::Output> {
         Ok(input
             .into_iter()
-            .filter(|&n| (n & 0xffff_ffff + ((n >> 32) & 0xffff_ffff)) > 1usize)
+            .filter(|&n| {
+                let hi = (n >> 32) & 0xffff_ffff;
+                let lo = n & 0xffff_ffff;
+                (lo + hi) > 1usize
+            })
             .count())
     }
 }
 
 fn parse_line(input: &[u8]) -> IResult<&[u8], Vec<(Type, Point)>> {
-    let number = |input| -> IResult<&[u8], usize> { map(digit1, |s: &[u8]| parse_int(s))(input) };
+    let number =
+        |input| -> IResult<&[u8], usize> { map(digit1, |s: &[u8]| parse_int::<usize>(s))(input) };
     let (input, (x1, _, y1, _, x2, _, y2)) = tuple((
         number,
         tag(b","),
@@ -79,30 +84,28 @@ fn parse_line(input: &[u8]) -> IResult<&[u8], Vec<(Type, Point)>> {
         tag(b","),
         number,
     ))(input)?;
-    Ok((
-        input,
-        if x1 == x2 {
-            (min(y1, y2)..=max(y1, y2))
-                .map(|y| (Type::Straight, (x1, y)))
-                .collect()
-        } else if y1 == y2 {
-            (min(x1, x2)..=max(x1, x2))
-                .map(|x| (Type::Straight, (x, y1)))
-                .collect()
+    let vec: Vec<_> = if x1 == x2 {
+        (min(y1, y2)..=max(y1, y2))
+            .map(|y| (Type::Straight, (x1, y)))
+            .collect()
+    } else if y1 == y2 {
+        (min(x1, x2)..=max(x1, x2))
+            .map(|x| (Type::Straight, (x, y1)))
+            .collect()
+    } else {
+        let xs: Vec<_> = if x1 > x2 {
+            (x2..=x1).rev().collect()
         } else {
-            let xs: Vec<_> = if x1 > x2 {
-                (x2..=x1).rev().collect()
-            } else {
-                (x1..=x2).collect()
-            };
-            let ys: Vec<_> = if y1 > y2 {
-                (y2..=y1).rev().collect()
-            } else {
-                (y1..=y2).collect()
-            };
-            zip(xs, ys).map(|p| (Type::Diag, p)).collect()
-        },
-    ))
+            (x1..=x2).collect()
+        };
+        let ys: Vec<_> = if y1 > y2 {
+            (y2..=y1).rev().collect()
+        } else {
+            (y1..=y2).collect()
+        };
+        zip(xs, ys).map(|p| (Type::Diag, p)).collect()
+    };
+    Ok((input, vec))
 }
 
 #[cfg(test)]

@@ -43,7 +43,7 @@ fn not(set: u8) -> u8 {
 
 #[inline]
 fn first_bit(set: u8) -> Option<usize> {
-    (0..7).find(|b| set >> b & 1 == 1)
+    bits(set).next()
 }
 
 #[inline]
