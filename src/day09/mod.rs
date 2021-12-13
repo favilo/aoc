@@ -53,7 +53,7 @@ impl Runner for Day {
 
     fn part1(input: &Self::Input) -> Result<Self::Output> {
         Ok(low_points(input)
-            .par_bridge()
+            // .par_bridge()
             .map(|(_, v)| v as usize + 1)
             .sum())
     }
@@ -74,8 +74,9 @@ impl Runner for Day {
 }
 
 fn basin_size(array: &Array2<usize>, low: (usize, usize)) -> usize {
-    let mut visited = HashSet::new();
+    let mut visited = HashSet::with_capacity(array.len());
     let mut stack = vec![low];
+    stack.reserve(array.len());
     while !stack.is_empty() {
         let this = stack.pop().unwrap();
         if visited.contains(&this) || array[this] == 9 {

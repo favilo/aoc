@@ -4,10 +4,13 @@
 use std::{
     fmt::Debug,
     fs::read_to_string,
+    path::Path,
     time::{Duration, Instant},
 };
 
 use anyhow::Result;
+
+use crate::utils::download_input;
 
 mod utils;
 
@@ -46,7 +49,8 @@ run_days!(
     day06 = 6,
     day07 = 7,
     day08 = 8,
-    day09 = 9
+    day09 = 9,
+    day10 = 10
 );
 
 pub trait Runner {
@@ -61,7 +65,13 @@ pub trait Runner {
             format!(" : {}", comment)
         };
         log::info!("Day {}{}\n", Self::day(), comment);
-        let input = read_to_string(format!("input/{}/day{:02}.txt", YEAR, Self::day()))?;
+        let input_path = format!("input/{}/day{:02}.txt", YEAR, Self::day());
+        if !Path::new(&input_path).exists() {
+            let session_file = home::home_dir().unwrap().join(".aocsession");
+            let session = read_to_string(&session_file)?;
+            download_input(Self::day(), YEAR, &session, &input_path)?;
+        }
+        let input = read_to_string(input_path)?;
         let now = Instant::now();
         let input = Self::get_input(&input)?;
         let elapsed_i = now.elapsed();

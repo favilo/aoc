@@ -43,7 +43,7 @@ macro_rules! benches {
     };
 }
 
-benches! { day01, day02, day03, day04, day05, day06, day07, day08, day09 }
+benches! { day01, day02, day03, day04, day05, day06, day07, day08, day09, day10 }
 
 fn custom() -> Criterion {
     let mut options = Options::default();

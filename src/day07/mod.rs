@@ -1,23 +1,11 @@
 use anyhow::Result;
 
-use crate::{utils::parse_int, Runner};
+use crate::{
+    utils::{mean, median, parse_int},
+    Runner,
+};
 
 pub struct Day;
-
-fn mean(l: &[usize]) -> f64 {
-    let sum = l.iter().sum::<usize>();
-    (sum as f64) / (l.len() as f64)
-}
-
-fn median(l: &[usize]) -> usize {
-    let len = l.len();
-    let mid = len / 2;
-    if len % 2 == 0 {
-        (l[(mid - 1)] + l[mid]) / 2
-    } else {
-        l[mid]
-    }
-}
 
 impl Runner for Day {
     type Input = Vec<usize>;
