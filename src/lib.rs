@@ -50,7 +50,8 @@ run_days!(
     day07 = 7,
     day08 = 8,
     day09 = 9,
-    day10 = 10
+    day10 = 10,
+    day11 = 11
 );
 
 pub trait Runner {

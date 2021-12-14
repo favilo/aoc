@@ -63,6 +63,10 @@ day10/get_input         time:   [313.38 us 313.80 us 314.33 us]
 day10/part1             time:   [74.825 ns 74.911 ns 75.012 ns]
 day10/part2             time:   [1.2887 us 1.2906 us 1.2923 us]
 
+day11/get_input         time:   [1.5303 us 1.5320 us 1.5338 us]
+day11/part1             time:   [657.77 us 658.31 us 658.91 us]
+day11/part2             time:   [1.9361 ms 1.9375 ms 1.9391 ms]
+
 ```
 
 ## Failed experiments
