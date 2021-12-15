@@ -77,6 +77,9 @@ day14/get_input         time:   [5.9087 us 5.9148 us 5.9221 us]
 day14/part1             time:   [14.963 us 14.976 us 14.991 us]
 day14/part2             time:   [59.822 us 59.862 us 59.911 us]
 
+day15/get_input         time:   [141.84 us 141.97 us 142.13 us]
+day15/part1             time:   [1.2577 ms 1.2588 ms 1.2601 ms]
+day15/part2             time:   [67.768 ms 67.835 ms 67.913 ms]
 ```
 
 ## Failed experiments

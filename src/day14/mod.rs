@@ -160,7 +160,7 @@ CN -> C
         println!("\n{:?}", map);
         assert_eq!(1749, count('B', &map));
         assert_eq!(1588, Day::part1(&input)?);
-        assert_eq!(175594, Day::part2(&input)?);
+        assert_eq!(2188189693529, Day::part2(&input)?);
         Ok(())
     }
 }

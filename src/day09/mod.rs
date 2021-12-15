@@ -6,24 +6,13 @@ use std::{
 use anyhow::Result;
 use itertools::Itertools;
 use ndarray::Array2;
-use nom::{
-    character::complete::{multispace0, one_of},
-    combinator::map,
-    multi::many1,
-    sequence::terminated,
-    IResult,
-};
+
 use rayon::iter::{ParallelBridge, ParallelIterator};
 
-use crate::{utils::parse_int, Runner};
-
-fn parse_input<'a>(input: &'a [u8]) -> IResult<&'a [u8], Vec<usize>> {
-    let r = terminated(
-        many1(map(one_of("0123456789"), |s| parse_int(&[s as u8]))),
-        multispace0,
-    )(input);
-    r
-}
+use crate::{
+    utils::{four_neighbors, single_digit_line},
+    Runner,
+};
 
 pub struct Day;
 
@@ -41,7 +30,7 @@ impl Runner for Day {
         let mut v = input
             .lines()
             .map(str::as_bytes)
-            .map(parse_input)
+            .map(single_digit_line)
             .map(Result::unwrap)
             .map(|t| t.1)
             .map(Vec::into_iter)
@@ -74,6 +63,7 @@ impl Runner for Day {
 }
 
 fn basin_size(array: &Array2<usize>, low: (usize, usize)) -> usize {
+    let shape = array.shape();
     let mut visited = HashSet::with_capacity(array.len());
     let mut stack = vec![low];
     stack.reserve(array.len());
@@ -83,7 +73,7 @@ fn basin_size(array: &Array2<usize>, low: (usize, usize)) -> usize {
             continue;
         }
         visited.insert(this);
-        neighbors(this)
+        four_neighbors(this, (shape[0], shape[1]))
             .filter(|idx| array.get(*idx).is_some())
             .for_each(|idx| stack.push(idx));
     }
@@ -92,25 +82,22 @@ fn basin_size(array: &Array2<usize>, low: (usize, usize)) -> usize {
 }
 
 fn low_points<'a>(input: &'a Array2<usize>) -> impl Iterator<Item = ((usize, usize), usize)> + 'a {
+    let shape = input.shape();
     input
         .indexed_iter()
-        .map(|(idx, v)| (idx, v, neighbors(idx).map(|n| input.get(n)).flatten()))
+        .map(|(idx, v)| {
+            (
+                idx,
+                v,
+                four_neighbors(idx, (shape[0], shape[1]))
+                    .map(|n| input.get(n))
+                    .flatten(),
+            )
+        })
         .filter_map(|(idx, v, mut n)| {
             let all: bool = n.all(|o| -> bool { v < &&o });
             all.then(|| (idx, *v))
         })
-}
-
-fn neighbors(idx: (usize, usize)) -> impl Iterator<Item = (usize, usize)> {
-    [
-        (idx.0 as isize - 1, idx.1 as isize),
-        (idx.0 as isize, idx.1 as isize - 1),
-        (idx.0 as isize + 1, idx.1 as isize),
-        (idx.0 as isize, idx.1 as isize + 1),
-    ]
-    .into_iter()
-    .filter(|&(x, y)| x >= 0 && y >= 0)
-    .map(|(x, y)| (x as usize, y as usize))
 }
 
 #[cfg(test)]

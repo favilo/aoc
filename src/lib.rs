@@ -17,7 +17,7 @@ mod utils;
 const YEAR: usize = 2021;
 
 macro_rules! run_days {
-    ($day:ident = $id:expr, $($days:ident = $ids:expr),*) => {
+    ($day:ident = $id:expr, $($days:ident = $ids:expr),* $(,)?) => {
         pub mod $day;
         $(pub mod $days;)*
         pub fn run(days: Vec<usize>) -> Result<Duration> {
@@ -54,7 +54,8 @@ run_days!(
     day11 = 11,
     // day12 = 12,
     day13 = 13,
-    day14 = 14
+    day14 = 14,
+    day15 = 15,
 );
 
 pub trait Runner {

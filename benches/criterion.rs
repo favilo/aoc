@@ -29,7 +29,7 @@ macro_rules! days {
 }
 
 macro_rules! benches {
-    ($day:ident, $($days:ident),+) => {
+    ($day:ident, $($days:ident),+ $(,)?) => {
         days! { $day, $($days),+ }
         criterion_group!(
             name = benches;
@@ -43,7 +43,10 @@ macro_rules! benches {
     };
 }
 
-benches!(day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day13, day14);
+benches!(
+    day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day13, day14,
+    day15,
+);
 
 fn custom() -> Criterion {
     let mut options = Options::default();

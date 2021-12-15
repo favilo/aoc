@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use anyhow::Result;
 use itertools::iproduct;
-use ndarray::{Array2, Axis};
+use ndarray::Array2;
 use nom::{
     character::complete::{multispace0, one_of},
     combinator::map,
@@ -62,16 +62,6 @@ impl Runner for Day {
     }
 }
 
-#[allow(dead_code)]
-fn print_array(array: &Array2<usize>) {
-    for row in array.axis_iter(Axis(0)) {
-        for c in row {
-            print!("{}", c);
-        }
-        println!("");
-    }
-}
-
 fn neighbors((x, y): (usize, usize)) -> impl Iterator<Item = (usize, usize)> {
     iproduct!(-1..=1, -1..=1)
         .filter(move |&(dx, dy)| dx != 0 || dy != 0)
@@ -121,6 +111,8 @@ fn step(array: &mut Array2<usize>) -> usize {
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::print_array;
+
     use super::*;
 
     #[test]

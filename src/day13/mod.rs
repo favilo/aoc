@@ -166,7 +166,7 @@ fold along x=5
             .iter()
             .for_each(|fold| array = fold_grid(&array, *fold));
         println!("{:?}", array);
-        assert_eq!(175594, Day::part2(&input)?);
+        assert_eq!(1337, Day::part2(&input)?);
         Ok(())
     }
 }
