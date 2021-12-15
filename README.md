@@ -67,6 +67,13 @@ day11/get_input         time:   [1.5303 us 1.5320 us 1.5338 us]
 day11/part1             time:   [657.77 us 658.31 us 658.91 us]
 day11/part2             time:   [1.9361 ms 1.9375 ms 1.9391 ms]
 
+Skipped day 12 for now
+
+day13/get_input         time:   [53.814 us 53.845 us 53.882 us]
+day13/part1             time:   [1.4433 ms 1.4449 ms 1.4467 ms]
+day13/part2             time:   [2.4746 ms 2.4772 ms 2.4797 ms]
+
+
 ```
 
 ## Failed experiments

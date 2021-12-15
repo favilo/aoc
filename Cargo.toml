@@ -32,6 +32,7 @@ pprof = { version = "0.6.1", features = ["flamegraph", "criterion"] }
 [[bench]]
 name = "criterion"
 harness = false
+required_features = ["disable_for_tests"]
 
 [profile.release]
 opt-level = 3
@@ -45,3 +46,4 @@ lto = "thin"
 
 [features]
 day06_ring = []
+disable_for_tests = []
