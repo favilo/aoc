@@ -11,6 +11,7 @@ anyhow = "1.0.51"
 chrono = "0.4.19"
 clap = "2.34.0"
 fern = { version = "0.6.0", features = ["colored"] }
+fxhash = "0.2.1"
 home = "0.5.3"
 itertools = "0.10.1"
 log = "0.4.14"

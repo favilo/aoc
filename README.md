@@ -73,6 +73,9 @@ day13/get_input         time:   [53.814 us 53.845 us 53.882 us]
 day13/part1             time:   [1.4433 ms 1.4449 ms 1.4467 ms]
 day13/part2             time:   [2.4746 ms 2.4772 ms 2.4797 ms]
 
+day14/get_input         time:   [5.9087 us 5.9148 us 5.9221 us]
+day14/part1             time:   [14.963 us 14.976 us 14.991 us]
+day14/part2             time:   [59.822 us 59.862 us 59.911 us]
 
 ```
 
