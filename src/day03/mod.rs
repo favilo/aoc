@@ -25,7 +25,6 @@ fn filter_whats_left(left: &mut <Day as Runner>::Input, digit: u8, bit: usize) {
 pub struct Day;
 impl Runner for Day {
     type Input = Vec<usize>;
-    type Output = usize;
 
     fn day() -> usize {
         03
@@ -39,7 +38,7 @@ impl Runner for Day {
             .collect())
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         let gamma = (0..12)
             .rev()
             .map(|b| most_common_bit(input, b))
@@ -50,7 +49,7 @@ impl Runner for Day {
         Ok(answer)
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let mut left = input.to_owned();
         let bits = 12;
         let oxygen = (0..bits)

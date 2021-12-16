@@ -63,7 +63,6 @@ impl TryFrom<char> for Bracket {
 
 impl Runner for Day {
     type Input = Vec<(Vec<(Type, isize)>, Option<Type>)>;
-    type Output = usize;
 
     fn day() -> usize {
         10
@@ -73,11 +72,11 @@ impl Runner for Day {
         Ok(input.lines().map(pairs).map(Result::unwrap).collect())
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         Ok(input.iter().map(|t| t.1).flatten().map(|b| b.score()).sum())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let mut scores = input
             .iter()
             .filter(|t| t.1.is_none())

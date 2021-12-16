@@ -18,7 +18,6 @@ pub struct Day;
 
 impl Runner for Day {
     type Input = Array2<usize>;
-    type Output = usize;
 
     fn day() -> usize {
         9
@@ -40,14 +39,14 @@ impl Runner for Day {
         }))
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         Ok(low_points(input)
             // .par_bridge()
             .map(|(_, v)| v as usize + 1)
             .sum())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let mut lows = low_points(input)
             .par_bridge()
             .map(|low| basin_size(input, low.0))

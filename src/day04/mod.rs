@@ -67,7 +67,6 @@ pub struct Bingo {
 
 impl Runner for Day {
     type Input = Bingo;
-    type Output = usize;
 
     fn day() -> usize {
         4
@@ -79,7 +78,7 @@ impl Runner for Day {
         Ok(bingo)
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         let input = input.clone();
         let numbers = input.numbers;
         let mut boards = input.boards;
@@ -97,7 +96,7 @@ impl Runner for Day {
         Ok(last_num * board.score())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let input = input.clone();
         let numbers = input.numbers;
         let mut boards = input.boards;

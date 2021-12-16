@@ -25,7 +25,6 @@ pub struct Day;
 
 impl Runner for Day {
     type Input = Array2<usize>;
-    type Output = usize;
 
     fn day() -> usize {
         11
@@ -47,12 +46,12 @@ impl Runner for Day {
         }))
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         let mut array = input.clone();
         Ok((0..100).map(|_| step(&mut array)).sum())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let mut array = input.clone();
         let mut steps = 1;
         while input.len() != step(&mut array) {

@@ -120,7 +120,6 @@ pub struct Day;
 
 impl Runner for Day {
     type Input = UnGraphMap<Node, ()>;
-    type Output = usize;
 
     fn day() -> usize {
         12
@@ -133,7 +132,7 @@ impl Runner for Day {
         Ok(UnGraphMap::<Node, ()>::from_edges(&edges))
     }
 
-    fn part1(graph: &Self::Input) -> Result<Self::Output> {
+    fn part1(graph: &Self::Input) -> Result<usize> {
         Ok(count_paths(
             graph,
             &mut vec![Node::Start],
@@ -142,7 +141,7 @@ impl Runner for Day {
         ))
     }
 
-    fn part2(graph: &Self::Input) -> Result<Self::Output> {
+    fn part2(graph: &Self::Input) -> Result<usize> {
         Ok(count_paths(
             graph,
             &mut vec![Node::Start],

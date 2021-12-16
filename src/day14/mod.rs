@@ -24,7 +24,6 @@ pub struct Day;
 
 impl Runner for Day {
     type Input = (Template, Vec<Rule>);
-    type Output = usize;
 
     fn day() -> usize {
         14
@@ -37,11 +36,11 @@ impl Runner for Day {
         Ok((temp, rules))
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         apply(10, input)
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         apply(40, input)
     }
 }

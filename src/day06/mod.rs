@@ -49,7 +49,6 @@ impl Runner for Day {
 
     #[cfg(not(feature = "day06_ring"))]
     type Input = [usize; 9];
-    type Output = usize;
 
     fn day() -> usize {
         6
@@ -67,14 +66,14 @@ impl Runner for Day {
             }))
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         let mut v = input.to_owned();
         (0..80).for_each(|_| update_state(&mut v));
 
         Ok(v.into_iter().sum())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let mut v = input.to_owned();
         (0..256).for_each(|_| update_state(&mut v));
 

@@ -42,7 +42,6 @@ fn parse_movement(input: &str) -> IResult<&str, Movement> {
 pub struct Day;
 impl Runner for Day {
     type Input = Vec<Movement>;
-    type Output = usize;
 
     fn day() -> usize {
         2
@@ -59,7 +58,7 @@ impl Runner for Day {
             .collect())
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         let (h, v) = input.into_iter().fold((0, 0), |(mut h, mut v), m| {
             match m {
                 Movement::Forward(m) => h += m,
@@ -71,7 +70,7 @@ impl Runner for Day {
         Ok(h * v as usize)
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let (h, v, _) = input
             .into_iter()
             .fold((0, 0, 0), |(mut h, mut v, mut aim), m| {

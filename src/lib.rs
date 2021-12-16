@@ -58,9 +58,12 @@ run_days!(
     day15 = 15,
 );
 
-pub trait Runner {
+pub trait Runner<Part1 = usize, Part2 = usize>
+where
+    Part1: Debug,
+    Part2: Debug,
+{
     type Input;
-    type Output: Debug;
 
     fn run() -> Result<Duration> {
         let comment = Self::comment();
@@ -105,6 +108,6 @@ pub trait Runner {
     }
 
     fn get_input(_: &str) -> Result<Self::Input>;
-    fn part1(_: &Self::Input) -> Result<Self::Output>;
-    fn part2(_: &Self::Input) -> Result<Self::Output>;
+    fn part1(_: &Self::Input) -> Result<Part1>;
+    fn part2(_: &Self::Input) -> Result<Part2>;
 }

@@ -9,7 +9,6 @@ pub struct Day;
 
 impl Runner for Day {
     type Input = Vec<usize>;
-    type Output = usize;
 
     fn day() -> usize {
         7
@@ -26,7 +25,7 @@ impl Runner for Day {
             .collect())
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         let idx = median(input) - 1;
         Ok(input
             .iter()
@@ -35,7 +34,7 @@ impl Runner for Day {
             .sum())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let floor = mean(input).floor() as usize;
         let ceil = mean(input).ceil() as usize;
         Ok([floor, ceil]

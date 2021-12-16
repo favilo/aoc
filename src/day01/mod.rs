@@ -5,9 +5,8 @@ use crate::Runner;
 
 pub struct Day;
 
-impl Runner for Day {
+impl Runner<i32, i32> for Day {
     type Input = Vec<i32>;
-    type Output = i32;
 
     fn day() -> usize {
         1
@@ -22,7 +21,7 @@ impl Runner for Day {
         Ok(nums)
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<i32> {
         let total = input.iter().fold((0, None), |acum, i| {
             if acum.1.is_none() {
                 (0, Some(i))
@@ -37,7 +36,7 @@ impl Runner for Day {
         Ok(total.0)
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<i32> {
         let total = input
             .iter()
             .tuple_windows()

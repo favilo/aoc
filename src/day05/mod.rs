@@ -20,9 +20,7 @@ pub enum Type {
 pub struct Day;
 
 impl Runner for Day {
-    // type Input = Vec<(Type, Point)>;
     type Input = Array2<usize>;
-    type Output = usize;
 
     fn day() -> usize {
         5
@@ -53,14 +51,14 @@ impl Runner for Day {
         Ok(grid)
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         Ok(input
             .into_iter()
             .filter(|&n| (n & 0xffff_ffff) > 1usize)
             .count())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         Ok(input
             .into_iter()
             .filter(|&n| {

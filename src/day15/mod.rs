@@ -15,7 +15,6 @@ pub struct Day;
 
 impl Runner for Day {
     type Input = Array2<usize>;
-    type Output = usize;
 
     fn day() -> usize {
         15
@@ -37,7 +36,7 @@ impl Runner for Day {
         }))
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         let shape = input.shape();
         Ok(astar(
             input,
@@ -47,7 +46,7 @@ impl Runner for Day {
         ))
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let shape = input.shape();
         let input = Array2::from_shape_fn((shape[0] * 5, shape[1] * 5), |(x, y)| {
             let (grid_x, grid_y) = (

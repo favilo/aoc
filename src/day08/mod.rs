@@ -261,7 +261,6 @@ fn parse_line(input: &[u8]) -> IResult<&[u8], (Vec<u8>, Vec<u8>)> {
 
 impl Runner for Day {
     type Input = Vec<(Vec<u8>, Vec<u8>)>;
-    type Output = usize;
 
     fn day() -> usize {
         8
@@ -277,7 +276,7 @@ impl Runner for Day {
             .collect())
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         Ok(input
             .iter()
             .map(|t| t.1.iter())
@@ -292,7 +291,7 @@ impl Runner for Day {
             .count())
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         let s: usize = input.into_iter().map(|(k, v)| decode_segments(k, v)).sum();
         Ok(s)
     }
