@@ -6,7 +6,6 @@ pub struct Day;
 
 impl Runner for Day {
     type Input = Vec<()>;
-    type Output = usize;
 
     fn day() -> usize {
         0 // FIXME
@@ -16,11 +15,11 @@ impl Runner for Day {
         todo!()
     }
 
-    fn part1(input: &Self::Input) -> Result<Self::Output> {
+    fn part1(input: &Self::Input) -> Result<usize> {
         todo!()
     }
 
-    fn part2(input: &Self::Input) -> Result<Self::Output> {
+    fn part2(input: &Self::Input) -> Result<usize> {
         todo!()
     }
 }
