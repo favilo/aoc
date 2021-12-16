@@ -14,11 +14,11 @@ macro_rules! days {
             let input =
                 read_to_string(format!("input/2021/day{:02}.txt", $day::Day::day())).unwrap();
             group.bench_function("get_input", |b| {
-                b.iter(|| <$day::Day as Runner>::get_input(&input))
+                b.iter(|| $day::Day::get_input(&input))
             });
-            let input = <$day::Day as Runner>::get_input(&input).unwrap();
-            group.bench_function("part1", |b| b.iter(|| <$day::Day as Runner>::part1(&input)));
-            group.bench_function("part2", |b| b.iter(|| <$day::Day as Runner>::part2(&input)));
+            let input = $day::Day::get_input(&input).unwrap();
+            group.bench_function("part1", |b| b.iter(|| $day::Day::part1(&input)));
+            group.bench_function("part2", |b| b.iter(|| $day::Day::part2(&input)));
             group.finish();
         }
     };
@@ -45,7 +45,7 @@ macro_rules! benches {
 
 benches!(
     day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12, day13,
-    day14, day15,
+    day14, day15, day16,
 );
 
 fn custom() -> Criterion {

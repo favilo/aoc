@@ -64,7 +64,7 @@ impl FromStr for Node {
             "end" => Self::End,
             node => {
                 let s = to_u16(s);
-                if node.to_lowercase() == node {
+                if node.chars().next().unwrap().is_lowercase() {
                     Self::Small(s)
                 } else {
                     Self::Large(s)

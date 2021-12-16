@@ -22,7 +22,7 @@ pub enum Fold {
 
 pub struct Day;
 
-impl Runner<usize, &str> for Day {
+impl Runner<usize, String> for Day {
     type Input = (Array2<bool>, Vec<Fold>);
 
     fn day() -> usize {
@@ -49,7 +49,7 @@ impl Runner<usize, &str> for Day {
         Ok(array.into_iter().filter(|&v| v).count())
     }
 
-    fn part2(input: &Self::Input) -> Result<&'static str> {
+    fn part2(input: &Self::Input) -> Result<String> {
         let (mut array, folds) = input.clone();
         folds
             .iter()
@@ -59,7 +59,7 @@ impl Runner<usize, &str> for Day {
             print_grid(&array);
         }
 
-        Ok("l337")
+        Ok("l337".to_string())
     }
 }
 
