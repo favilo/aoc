@@ -87,6 +87,10 @@ day16/get_input         time:   [59.267 us 59.344 us 59.421 us]
 day16/part1             time:   [314.11 ns 314.28 ns 314.48 ns]
 day16/part2             time:   [726.71 ns 728.15 ns 729.45 ns]
 
+day17/get_input         time:   [205.54 ns 205.75 ns 206.00 ns]
+day17/part1             time:   [5.2076 ms 5.2104 ms 5.2139 ms]
+day17/part2             time:   [5.3259 ms 5.3324 ms 5.3415 ms]
+
 ```
 
 ## Failed experiments

@@ -97,7 +97,7 @@ impl Runner<usize, u64> for Day {
         let (bytes, packets) =
             // bits::<_, _, Error<BitStream<'a>>, Error<&'a [u8]>, _>(
                 packets(&bytes).unwrap();
-        // assert_eq!(b"", bytes);
+        assert_eq!(b"", bytes);
         Ok(packets)
     }
 
