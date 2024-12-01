@@ -1,0 +1,38 @@
+[package]
+name = "aoc2020"
+version = "0.1.0"
+authors = ["Kevin Oberlies <favilo@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.34"
+bytecount = "0.6.2"
+chrono = "0.4.19"
+daggy = "0.7.0"
+fern = { version = "0.6.0", features = ["colored"] }
+hashers = "1.0.1"
+itertools = "0.9.0"
+lazy_static = "1.4.0"
+log = "0.4.11"
+multimap = "0.8.2"
+ndarray = "0.14.0"
+nom = "6.0.1"
+num = "0.3.1"
+petgraph = "0.5.1"
+rayon = "1.5.0"
+regex = "1.4.2"
+serde = "1.0.117"
+serde_derive = "1.0.117"
+vec_map = "0.8.2"
+
+[dev-dependencies]
+criterion = "0.3.3"
+
+[[bench]]
+name = "criterion"
+harness = false
+
+[profile.release]
+opt-level = 3
