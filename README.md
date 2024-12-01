@@ -18,7 +18,7 @@ valid session token from adventofcode.com
 ### Notes for starting with new computer.
 
 This project uses [git-crypt](https://github.com/AGWA/git-crypt) to encrypt my secrets with gpg.
-If you don't have access to the private keys anymore, you can just generate a new `.env` file by 
+If I don't have access to the private keys anymore, I can just generate a new `.env` file by 
 copying the `dot-env.example` file.
 
 ```sh
