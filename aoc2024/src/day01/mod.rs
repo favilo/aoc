@@ -65,7 +65,7 @@ mod tests {
     }
 
     prod_case! {
-        part1 = 1681;
-        part2 = 201684;
+        part1 = 1970720;
+        part2 = 17191599;
     }
 }
