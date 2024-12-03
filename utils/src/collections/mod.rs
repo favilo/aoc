@@ -2,17 +2,29 @@
 #[repr(transparent)]
 pub struct HVec<T, const N: usize = 10>(heapless::Vec<T, N>);
 
-impl core::ops::Deref for HVec<usize> {
-    type Target = [usize];
+impl<T, const N: usize> core::ops::Deref for HVec<T, N> {
+    type Target = [T];
 
     fn deref(&self) -> &Self::Target {
         self.0.deref()
     }
 }
 
-impl core::ops::DerefMut for HVec<usize> {
+impl<T, const N: usize> core::ops::DerefMut for HVec<T, N> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         self.0.deref_mut()
+    }
+}
+
+impl<T, const N: usize> AsRef<[T]> for HVec<T, N> {
+    fn as_ref(&self) -> &[T] {
+        self.0.as_ref()
+    }
+}
+
+impl<T, const N: usize> AsMut<[T]> for HVec<T, N> {
+    fn as_mut(&mut self) -> &mut [T] {
+        self.0.as_mut()
     }
 }
 
@@ -31,6 +43,12 @@ where
 
 impl<T, const N: usize> FromIterator<T> for HVec<T, N> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
-        Self(heapless::Vec::from_iter(iter))
+        heapless::Vec::from_iter(iter).into()
+    }
+}
+
+impl<T, const N: usize> From<heapless::Vec<T, N>> for HVec<T, N> {
+    fn from(v: heapless::Vec<T, N>) -> Self {
+        Self(v)
     }
 }

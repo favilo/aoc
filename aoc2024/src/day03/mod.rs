@@ -1,12 +1,11 @@
 use miette::Result;
 use winnow::{
     ascii::dec_uint,
-    combinator::{alt, eof, fail, opt, repeat, rest, trace},
-    error::ErrMode,
+    combinator::{alt, repeat, repeat_till, rest, terminated},
     seq,
-    stream::Stream,
-    token::{any, take_till},
-    Located, PResult, Parser,
+    stream::{AsBStr, AsChar, Compare, Stream, StreamIsPartial},
+    token::any,
+    PResult, Parser,
 };
 
 use crate::errors::ToMiette;
@@ -21,68 +20,111 @@ pub enum Instruction {
     Dont,
 }
 
-fn mul(input: &mut Located<&str>) -> PResult<Instruction> {
-    seq!(_: "mul(", dec_uint, _: ",", dec_uint, _: ")")
-        .map(|(a, b)| Instruction::Mul(a, b))
-        .parse_next(input)
-}
-
-fn r#do(input: &mut Located<&str>) -> PResult<Instruction> {
-    seq!(_: "do()").map(|_| Instruction::Do).parse_next(input)
-}
-
-fn dont(input: &mut Located<&str>) -> PResult<Instruction> {
-    seq!(_: "don't()")
-        .map(|_| Instruction::Dont)
-        .parse_next(input)
-}
-
-fn instruction(input: &mut Located<&str>) -> PResult<Instruction> {
-    alt((mul, r#do, dont)).parse_next(input)
-}
-
-fn not_instruction(input: &mut Located<&str>) -> PResult<()> {
-    while !input.is_empty() {
-        let instruction_letters = ('m'..='m', 'd'..='d');
-        let v: PResult<&str> = take_till(0.., instruction_letters).parse_next(input);
-        match v {
-            Err(ErrMode::Backtrack(_)) => {
-                rest.parse_next(input)?;
-                return Ok(());
-            }
-            Err(e) => return Err(e),
-            Ok(_) => {}
-        }
-
-        let checkpoint = input.checkpoint();
-        let v = instruction.with_taken().parse_next(input);
-        match v {
-            Err(_) => {}
-            Ok(_) => {
-                input.reset(&checkpoint);
-                return Ok(());
-            }
-        }
-        let v = any.parse_next(input);
-        match v {
-            Err(ErrMode::Backtrack(_)) => {
-                eof.parse_next(input)?;
-                return Ok(());
-            }
-            Err(e) => return Err(e),
-            Ok(_) => {}
+impl Instruction {
+    #[inline]
+    pub fn total(&self) -> usize {
+        match self {
+            Instruction::Mul(a, b) => a * b,
+            Instruction::Do => 0,
+            Instruction::Dont => 0,
         }
     }
-    fail.parse_next(input)
+
+    fn parser<S>(input: &mut S) -> PResult<Self>
+    where
+        for<'a> S: Stream + StreamIsPartial + Compare<&'a str>,
+        <S as Stream>::Token: AsChar + Clone,
+        <S as Stream>::Slice: AsBStr,
+    {
+        alt((Self::mul, Self::r#do, Self::dont)).parse_next(input)
+    }
+
+    fn mul<S>(input: &mut S) -> PResult<Self>
+    where
+        for<'a> S: Stream + StreamIsPartial + Compare<&'a str>,
+        <S as Stream>::Token: AsChar + Clone,
+        <S as Stream>::Slice: AsBStr,
+    {
+        seq!(_: "mul(", dec_uint, _: ",", dec_uint, _: ")")
+            .map(|(a, b)| Instruction::Mul(a, b))
+            .parse_next(input)
+    }
+
+    fn r#do<S>(input: &mut S) -> PResult<Self>
+    where
+        for<'a> S: Stream + StreamIsPartial + Compare<&'a str>,
+        <S as Stream>::Token: AsChar + Clone,
+        <S as Stream>::Slice: AsBStr,
+    {
+        "do()".value(Instruction::Do).parse_next(input)
+    }
+
+    fn dont<S>(input: &mut S) -> PResult<Self>
+    where
+        for<'a> S: Stream + StreamIsPartial + Compare<&'a str>,
+        <S as Stream>::Token: AsChar + Clone,
+        <S as Stream>::Slice: AsBStr,
+    {
+        "don't()".value(Instruction::Dont).parse_next(input)
+    }
 }
 
-fn all_instructions(input: &mut Located<&str>) -> PResult<Vec<Instruction>> {
-    repeat(
-        0..,
-        seq!(_: trace("before instruction()", not_instruction), opt(instruction)).map(|t| t.0),
+fn all_instructions<S>(input: &mut S) -> PResult<<Day as Runner>::Input<'_>>
+where
+    for<'a> S: Stream + StreamIsPartial + Compare<&'a str>,
+    <S as Stream>::Token: AsChar + Clone,
+    <S as Stream>::Slice: AsBStr,
+{
+    terminated(
+        repeat(
+            0..,
+            repeat_till(0.., any.value(()), Instruction::parser).map(|((), inst)| inst),
+        ),
+        rest,
     )
-    .map(|v: Vec<Option<_>>| v.into_iter().flatten().collect())
     .parse_next(input)
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum AccumulatorState {
+    Disabled = 0,
+    #[default]
+    Enabled = 1,
+}
+
+impl AccumulatorState {
+    #[inline]
+    fn should(&self) -> bool {
+        *self == AccumulatorState::Enabled
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub struct Processor {
+    process: AccumulatorState,
+}
+
+impl Processor {
+    #[inline]
+    pub fn total(&mut self, inst: Instruction) -> usize {
+        match inst {
+            Instruction::Mul(_, _) => {
+                if self.process.should() {
+                    inst.total()
+                } else {
+                    0
+                }
+            }
+            Instruction::Do => {
+                self.process = AccumulatorState::Enabled;
+                0
+            }
+            Instruction::Dont => {
+                self.process = AccumulatorState::Disabled;
+                0
+            }
+        }
+    }
 }
 
 impl Runner for Day {
@@ -93,41 +135,24 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input<'_>> {
-        all_instructions.parse(Located::new(input)).to_miette()
+        all_instructions.parse(input).to_miette()
+
+        // For debugging with locations and spans:
+        // use winnow::stream::Located;
+        // all_instructions.parse(Located::new(input)).to_miette()
     }
 
     fn part1(input: &Self::Input<'_>) -> Result<usize> {
-        Ok(input
-            .iter()
-            .filter(|i| matches!(i, Instruction::Mul(_, _)))
-            .map(|i| {
-                let Instruction::Mul(a, b) = i else {
-                    unreachable!()
-                };
-                a * b
-            })
-            .sum())
+        Ok(input.iter().map(Instruction::total).sum())
     }
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
-        let mut do_it = true;
-        let mut sum = 0;
-        for inst in input {
-            match inst {
-                Instruction::Mul(a, b) => {
-                    if do_it {
-                        sum += a * b;
-                    }
-                }
-                Instruction::Do => {
-                    do_it = true;
-                }
-                Instruction::Dont => {
-                    do_it = false;
-                }
-            }
-        }
-        Ok(sum)
+        let mut processor = Processor::default();
+        Ok(input
+            .iter()
+            .copied()
+            .map(|inst| processor.total(inst))
+            .sum())
     }
 }
 

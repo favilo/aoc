@@ -90,4 +90,3 @@ pub fn get_input_path(year: usize, day: usize) -> Result<PathBuf, miette::Report
     };
     Ok(input_full_path)
 }
-
