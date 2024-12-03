@@ -1,4 +1,5 @@
 #![feature(associated_type_defaults)]
+#![warn(clippy::all, clippy::pedantic)]
 use std::{
     fmt::Debug,
     fs::read_to_string,

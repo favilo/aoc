@@ -1,3 +1,4 @@
+#![warn(clippy::all, clippy::pedantic)]
 pub mod collections;
 pub mod graph;
 pub mod math;
