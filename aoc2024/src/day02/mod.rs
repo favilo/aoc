@@ -70,14 +70,14 @@ impl Runner for Day {
     fn part1(input: &Self::Input<'_>) -> Result<usize> {
         Ok(input
             .iter()
-            .filter(|report| is_safe(report.iter().cloned()))
+            .filter(|report| is_safe(report.iter().copied()))
             .count())
     }
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
         Ok(input
             .iter()
-            .filter(|report| is_safe_with_dampener(report.iter().cloned()))
+            .filter(|report| is_safe_with_dampener(report.iter().copied()))
             .count())
     }
 }

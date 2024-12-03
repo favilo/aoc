@@ -11,13 +11,13 @@ use ndarray::{Array2, Axis};
 pub fn print_array(array: &Array2<usize>) {
     for row in array.axis_iter(Axis(0)) {
         for c in row {
-            print!("{}", c);
+            print!("{c}");
         }
         println!();
     }
 }
 
-pub fn trim_ascii_whitespace(x: &[u8]) -> &[u8] {
+#[must_use] pub fn trim_ascii_whitespace(x: &[u8]) -> &[u8] {
     let from = match x.iter().position(|x| !x.is_ascii_whitespace()) {
         Some(i) => i,
         None => return &x[0..0],

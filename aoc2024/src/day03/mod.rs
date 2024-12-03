@@ -22,7 +22,7 @@ pub enum Instruction {
 
 impl Instruction {
     #[inline]
-    pub fn total(&self) -> usize {
+    #[must_use] pub fn total(&self) -> usize {
         match self {
             Instruction::Mul(a, b) => a * b,
             Instruction::Do => 0,

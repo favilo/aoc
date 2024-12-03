@@ -44,7 +44,7 @@ fn save_input(filename: impl AsRef<Path>, text: String) -> Result<(), miette::Er
 }
 
 fn fetch_input(year: usize, day: usize, session: &str) -> Result<String, miette::Error> {
-    let url = format!("https://adventofcode.com/{}/day/{}/input", year, day);
+    let url = format!("https://adventofcode.com/{year}/day/{day}/input");
     log::info!("Downloading: {}", url);
     let cookie_header = HeaderValue::from_str(&format!("session={}", session.trim()))
         .into_diagnostic()
@@ -64,7 +64,7 @@ fn fetch_input(year: usize, day: usize, session: &str) -> Result<String, miette:
     let text = client
         .get(&url)
         .send()
-        .and_then(|response| response.text())
+        .and_then(reqwest::blocking::Response::text)
         .into_diagnostic()
         .wrap_err("failed to download input")?;
     Ok(text)
@@ -73,7 +73,7 @@ fn fetch_input(year: usize, day: usize, session: &str) -> Result<String, miette:
 pub fn get_input_path(year: usize, day: usize) -> Result<PathBuf, miette::Report> {
     let input_path = PathBuf::from("input")
         .join(year.to_string())
-        .join(format!("day{:02}.txt", day));
+        .join(format!("day{day:02}.txt"));
     let env_path = dotenv::dotenv()
         .into_diagnostic()
         .wrap_err("loading .env file")?;
@@ -86,7 +86,7 @@ pub fn get_input_path(year: usize, day: usize) -> Result<PathBuf, miette::Report
     } else {
         let joined_path = parent_path.join(&input_path);
         log::info!("Joined path: {}", joined_path.display());
-        joined_path.to_path_buf()
+        joined_path.clone()
     };
     Ok(input_full_path)
 }

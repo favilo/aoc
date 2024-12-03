@@ -52,9 +52,9 @@ where
     fn run(track: bool) -> Result<Duration> {
         let comment = Self::comment();
         let comment = if comment.is_empty() {
-            "".into()
+            String::new()
         } else {
-            format!(" : {}", comment)
+            format!(" : {comment}")
         };
         log::info!("Day {}{}\n", Self::day(), comment);
         let input_full_path = get_input_path(YEAR, Self::day())?;
@@ -94,7 +94,7 @@ where
     }
 
     fn day() -> usize;
-    fn comment() -> &'static str {
+    #[must_use] fn comment() -> &'static str {
         ""
     }
 

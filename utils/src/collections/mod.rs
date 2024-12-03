@@ -6,13 +6,13 @@ impl<T, const N: usize> core::ops::Deref for HVec<T, N> {
     type Target = [T];
 
     fn deref(&self) -> &Self::Target {
-        self.0.deref()
+        &self.0
     }
 }
 
 impl<T, const N: usize> core::ops::DerefMut for HVec<T, N> {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        self.0.deref_mut()
+        &mut self.0
     }
 }
 

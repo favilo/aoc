@@ -30,8 +30,8 @@ impl Runner for Day {
     fn part1(input: &Self::Input<'_>) -> Result<usize> {
         let (mut a, mut b) = input.clone();
 
-        a.sort();
-        b.sort();
+        a.sort_unstable();
+        b.sort_unstable();
 
         Ok(zip(a, b)
             .map(|(a, b)| (a as isize - b as isize).unsigned_abs())
@@ -40,8 +40,8 @@ impl Runner for Day {
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
         let (left, right): (_, HashMultiSet<usize>) = (
-            input.0.iter().cloned(),
-            HashMultiSet::from_iter(input.1.iter().cloned()),
+            input.0.iter().copied(),
+            HashMultiSet::from_iter(input.1.iter().copied()),
         );
         Ok(left.map(|v| v * right.count_of(&v)).sum())
     }

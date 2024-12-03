@@ -1,9 +1,9 @@
-pub fn mean(l: &[usize]) -> f64 {
+#[must_use] pub fn mean(l: &[usize]) -> f64 {
     let sum = l.iter().sum::<usize>();
     (sum as f64) / (l.len() as f64)
 }
 
-pub fn median(l: &[usize]) -> usize {
+#[must_use] pub fn median(l: &[usize]) -> usize {
     let len = l.len();
     let mid = len / 2;
     if len % 2 == 0 {
