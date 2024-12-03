@@ -1,7 +1,7 @@
 use std::iter::zip;
 
-use color_eyre::Result;
 use itertools::Itertools;
+use miette::Result;
 use multiset::HashMultiSet;
 
 use crate::Runner;

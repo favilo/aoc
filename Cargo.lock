@@ -125,9 +125,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4c95c10ba0b00a02636238b814946408b1322d5ac4760326e6fb8ec956d85775"
 
 [[package]]
+name = "aoc-utils"
+version = "0.1.0"
+dependencies = [
+ "dotenv",
+ "heapless",
+ "itertools 0.13.0",
+ "log",
+ "miette",
+ "ndarray",
+ "reqwest",
+ "winnow",
+]
+
+[[package]]
 name = "aoc2024"
 version = "0.1.0"
 dependencies = [
+ "aoc-utils",
  "bit-set",
  "byte_set",
  "chrono",
@@ -154,7 +169,6 @@ dependencies = [
  "pprof",
  "rayon",
  "reqwest",
- "smallvec",
  "text_io",
  "thiserror 2.0.3",
  "tqdm",
@@ -2081,9 +2095,6 @@ name = "smallvec"
 version = "1.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
-dependencies = [
- "serde",
-]
 
 [[package]]
 name = "snowflake"

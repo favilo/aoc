@@ -11,9 +11,11 @@ macro_rules! days {
         use aoc2024::$day;
 
         fn $day(c: &mut Criterion) {
+            use aoc_utils::utils::file::get_input_path;
             let mut group = c.benchmark_group(stringify!($day));
+            let input_path = get_input_path(2024, $day::Day::day()).unwrap();
             let input =
-                read_to_string(format!("input/2024/day{:02}.txt", $day::Day::day())).unwrap();
+                read_to_string(input_path).unwrap();
             group.bench_function("get_input", |b| {
                 b.iter(|| black_box($day::Day::get_input(&input)))
             });
@@ -43,7 +45,7 @@ macro_rules! benches {
     };
 }
 
-benches!(day01,);
+benches!(day01, day02, day03,);
 
 fn custom() -> Criterion {
     let mut options = Options::default();

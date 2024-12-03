@@ -1,0 +1,15 @@
+[package]
+name = "aoc-utils"
+version = "0.1.0"
+edition = "2021"
+resolver = "2"
+
+[dependencies]
+log = "0.4.17"
+itertools = "0.13.0"
+miette = { version = "7.4.0", features = ["fancy"] }
+ndarray = { version = "0.16.1", features = ["rayon"] }
+reqwest = { version = "0.12.9", features = ["blocking"] }
+heapless = "0.8.0"
+winnow = "0.6.20"
+dotenv = "0.15.0"

@@ -2,6 +2,7 @@
 name = "aoc2024"
 version = "0.1.0"
 edition = "2021"
+resolver = "2"
 
 [lib]
 bench = false
@@ -38,6 +39,7 @@ thiserror = "2.0.3"
 tqdm = "0.7.0"
 tracking-allocator = "0.4.0"
 counter = "0.6.0"
+aoc-utils = { path = "../utils" }
 
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }
@@ -58,7 +60,7 @@ opt-level = 3
 
 [profile.bench]
 opt-level = 3
-debug=true
+debug = true
 # lto = "thin"
 incremental = true
 

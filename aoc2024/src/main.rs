@@ -1,8 +1,8 @@
 use std::sync::atomic::AtomicBool;
 
 use clap::{ArgAction, Parser};
-use color_eyre::Result;
 use fern::colors::{Color, ColoredLevelConfig};
+use miette::{IntoDiagnostic, MietteHandlerOpts, Result, WrapErr};
 use mimalloc::MiMalloc;
 use tracking_allocator::{AllocationGroupId, AllocationRegistry, AllocationTracker, Allocator};
 
@@ -53,7 +53,18 @@ impl AllocationTracker for StdoutTracker {
 }
 
 fn setup_logger() -> Result<()> {
-    color_eyre::install()?;
+    miette::set_hook(Box::new(|_| {
+        Box::new(
+            MietteHandlerOpts::new()
+                .terminal_links(true)
+                .unicode(true)
+                .context_lines(3)
+                .tab_width(4)
+                .break_words(true)
+                .with_cause_chain()
+                .build(),
+        )
+    }))?;
     fern::Dispatch::new()
         .format(|out, message, record| {
             let colors = ColoredLevelConfig::new()
@@ -71,7 +82,9 @@ fn setup_logger() -> Result<()> {
         .level(log::LevelFilter::Info)
         .chain(std::io::stdout())
         // .chain(fern::log_file("output.log")?)
-        .apply()?;
+        .apply()
+        .into_diagnostic()
+        .wrap_err("failed to setup logger")?;
     Ok(())
 }
 
