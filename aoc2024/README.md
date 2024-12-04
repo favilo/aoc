@@ -56,9 +56,9 @@ day03/get_input         time:   [115.21 µs 115.31 µs 115.43 µs]
 day03/part1             time:   [286.51 ns 286.89 ns 287.56 ns]
 day03/part2             time:   [384.34 ns 384.55 ns 384.78 ns]
 
-day04/get_input         time:   [36.074 µs 36.171 µs 36.257 µs]
-day04/part1             time:   [930.56 µs 932.72 µs 935.74 µs]
-day04/part2             time:   [11.553 ms 11.562 ms 11.572 ms]
+day04/get_input         time:   [35.918 µs 36.072 µs 36.212 µs]
+day04/part1             time:   [225.63 µs 225.88 µs 226.19 µs]
+day04/part2             time:   [10.010 ms 10.046 ms 10.091 ms]
 
 ```
 <details>
@@ -72,6 +72,10 @@ day02/part2             time:   [60.616 µs 60.749 µs 60.903 µs]
 day03/get_input         time:   [66.725 µs 66.804 µs 66.889 µs]
 day03/part1             time:   [251.68 ns 253.78 ns 256.20 ns]
 day03/part2             time:   [394.21 ns 396.88 ns 400.32 ns]
+
+day04/get_input         time:   [36.074 µs 36.171 µs 36.257 µs]
+day04/part1             time:   [930.56 µs 932.72 µs 935.74 µs]
+day04/part2             time:   [11.553 ms 11.562 ms 11.572 ms]
 
 ```
 </details>

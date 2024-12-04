@@ -10,6 +10,7 @@ type Coord = (usize, usize);
 type Delta = (isize, isize);
 
 const PART1_TARGET: [char; 4] = ['X', 'M', 'A', 'S'];
+const PART2_TARGET: [char; 3] = ['M', 'A', 'S'];
 
 fn index_iter<const N: usize>(
     idx: Coord,
@@ -24,26 +25,28 @@ fn index_iter<const N: usize>(
             let ymax = dy * (N as isize - 1) + idx.1 as isize;
             xmax < dim.0 as isize && xmax >= 0 && ymax < dim.1 as isize && ymax >= 0
         })
-        .map(move |(dx, dy)| {
+        .map(move |delta @ (dx, dy)| {
+            let mut coords = [Default::default(); N];
+            let mut map = (0..N as isize).map(|i| {
+                (
+                    (idx.0 as isize + dx * i) as usize,
+                    (idx.1 as isize + dy * i) as usize,
+                )
+            });
+            coords.fill_with(|| map.next().expect("array is the right size"));
+            let middle_coords = (
+                // Coordinate of middle, for part2
+                (idx.0 as isize + dx) as usize,
+                (idx.1 as isize + dy) as usize,
+            );
             (
                 (
-                    (
-                        // Coordinate of middle
-                        (idx.0 as isize + dx) as usize,
-                        (idx.1 as isize + dy) as usize,
-                    ),
-                    (dx, dy),
+                    middle_coords,
+                    // Direction, for part2
+                    delta,
                 ),
-                (0..N as isize)
-                    .map(|i| {
-                        (
-                            (idx.0 as isize + dx * i) as usize,
-                            (idx.1 as isize + dy * i) as usize,
-                        )
-                    })
-                    .collect::<Vec<Coord>>()
-                    .try_into()
-                    .unwrap(),
+                // Coordinates of the four surrounding cells, for parts 1 and 2
+                coords,
             )
         })
 }
@@ -56,6 +59,20 @@ fn perpendicular(a: Delta, b: Delta) -> bool {
         (1, -1) | (-1, 1) => [(1, 1), (-1, -1)].contains(&b),
         _ => panic!("invalid delta: {a:?} {b:?}"),
     }
+}
+
+fn slice_array_from_indexes<T, const N: usize>(
+    input: &Array2<T>,
+    idx: [(usize, usize); N],
+) -> [T; N]
+where
+    T: Default + Copy,
+{
+    // I want to use std::array::fill_with, but it's was measurably slower in part1
+    let mut output = [T::default(); N];
+    let mut iter = idx.into_iter().map(|i| input[i]);
+    output.fill_with(|| iter.next().expect("array is the right size"));
+    output
 }
 
 impl Runner for Day {
@@ -77,15 +94,7 @@ impl Runner for Day {
             .indexed_iter()
             .filter(|&(_, c)| c == &'X')
             .map(|(i, _)| index_iter::<4>(i, (input.nrows(), input.ncols())))
-            .flat_map(|idxs| {
-                idxs.map(|(_, idx)| {
-                    idx.into_iter()
-                        .map(|i| input[i])
-                        .collect::<Vec<_>>()
-                        .try_into()
-                        .unwrap()
-                })
-            })
+            .flat_map(|idxs| idxs.map(|(_, idx)| slice_array_from_indexes(input, idx)))
             .filter(|v: &[char; 4]| v == &PART1_TARGET)
             .count())
     }
@@ -95,19 +104,8 @@ impl Runner for Day {
             .indexed_iter()
             .filter(|&(_, c)| c == &'M')
             .map(|(i, _)| index_iter::<3>(i, (input.nrows(), input.ncols())))
-            .flat_map(|idxs| {
-                idxs.map(|(dir, idx)| {
-                    (
-                        dir,
-                        idx.into_iter()
-                            .map(|i| input[i])
-                            .collect::<Vec<_>>()
-                            .try_into()
-                            .unwrap(),
-                    )
-                })
-            })
-            .filter(|(_, v): &(_, [char; 3])| v == &['M', 'A', 'S'])
+            .flat_map(|idxs| idxs.map(|(dir, idx)| (dir, slice_array_from_indexes(input, idx))))
+            .filter(|(_, v): &(_, [char; 3])| v == &PART2_TARGET)
             .collect::<Vec<_>>();
         let crosses = crosses
             .iter()
@@ -142,7 +140,7 @@ mod tests {
     }
 
     prod_case! {
-        part1 = 1681;
-        part2 = 201684;
+        part1 = 2406;
+        part2 = 1807;
     }
 }
