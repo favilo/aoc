@@ -56,6 +56,10 @@ day03/get_input         time:   [115.21 µs 115.31 µs 115.43 µs]
 day03/part1             time:   [286.51 ns 286.89 ns 287.56 ns]
 day03/part2             time:   [384.34 ns 384.55 ns 384.78 ns]
 
+day04/get_input         time:   [36.074 µs 36.171 µs 36.257 µs]
+day04/part1             time:   [930.56 µs 932.72 µs 935.74 µs]
+day04/part2             time:   [11.553 ms 11.562 ms 11.572 ms]
+
 ```
 <details>
 Original timings:

@@ -41,7 +41,7 @@ macro_rules! run_days {
     };
 }
 
-run_days!(day01 = 1, day02 = 2, day03 = 3,);
+run_days!(day01 = 1, day02 = 2, day03 = 3, day04 = 4,);
 
 pub trait Runner<Part1 = usize, Part2 = usize>
 where
@@ -95,7 +95,8 @@ where
     }
 
     fn day() -> usize;
-    #[must_use] fn comment() -> &'static str {
+    #[must_use]
+    fn comment() -> &'static str {
         ""
     }
 
