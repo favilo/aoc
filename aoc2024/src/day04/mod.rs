@@ -1,6 +1,5 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
-use cpuprofiler::PROFILER;
 use itertools::Itertools;
 use miette::Result;
 use ndarray::Array2;

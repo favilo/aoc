@@ -47,7 +47,7 @@ macro_rules! benches {
     };
 }
 
-benches!(day01, day02, day03, day04,);
+benches!(day01, day02, day03, day04, day05,);
 
 fn custom() -> Criterion {
     let mut options = Options::default();
