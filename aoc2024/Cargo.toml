@@ -40,6 +40,7 @@ tqdm = "0.7.0"
 tracking-allocator = "0.4.0"
 counter = "0.6.0"
 aoc-utils = { path = "../utils" }
+cpuprofiler = "0.0.4"
 
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }
@@ -50,20 +51,5 @@ name = "criterion"
 harness = false
 # required_features = ["disable_for_tests"]
 
-[profile.release]
-opt-level = 3
-debug = 1
-incremental = true
-
-[profile.test]
-opt-level = 3
-
-[profile.bench]
-opt-level = 3
-debug = true
-# lto = "thin"
-incremental = true
-
 [features]
-day06_ring = []
 disable_for_tests = []

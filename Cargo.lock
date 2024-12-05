@@ -149,6 +149,7 @@ dependencies = [
  "clap",
  "color-eyre",
  "counter",
+ "cpuprofiler",
  "criterion",
  "dotenv",
  "fern",
@@ -461,6 +462,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "cpuprofiler"
+version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43f8479dbcfd2bbaa0c0c26779b913052b375981cdf533091f2127ea3d42e52b"
+dependencies = [
+ "error-chain",
+ "lazy_static",
+ "pkg-config",
+]
+
+[[package]]
 name = "criterion"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -627,6 +639,16 @@ checksum = "33d852cb9b869c2a9b3df2f71a3074817f01e1844f839a144f5fcef059a4eb5d"
 dependencies = [
  "libc",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "error-chain"
+version = "0.12.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2d2f06b9cac1506ece98fe3231e3cc9c4410ec3d5b1f24ae1c8946f0742cdefc"
+dependencies = [
+ "backtrace",
+ "version_check",
 ]
 
 [[package]]

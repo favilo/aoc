@@ -1,3 +1,6 @@
+use std::collections::{HashMap, HashSet};
+
+use cpuprofiler::PROFILER;
 use itertools::Itertools;
 use miette::Result;
 use ndarray::Array2;
@@ -90,29 +93,38 @@ impl Runner for Day {
     }
 
     fn part1(input: &Self::Input<'_>) -> Result<usize> {
-        Ok(input
+        let count = input
             .indexed_iter()
             .filter(|&(_, c)| c == &'X')
             .map(|(i, _)| index_iter::<4>(i, (input.nrows(), input.ncols())))
             .flat_map(|idxs| idxs.map(|(_, idx)| slice_array_from_indexes(input, idx)))
             .filter(|v: &[char; 4]| v == &PART1_TARGET)
-            .count())
+            .count();
+        Ok(count)
     }
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
-        let crosses = input
+        let mut map = HashMap::new();
+        input
             .indexed_iter()
             .filter(|&(_, c)| c == &'M')
             .map(|(i, _)| index_iter::<3>(i, (input.nrows(), input.ncols())))
             .flat_map(|idxs| idxs.map(|(dir, idx)| (dir, slice_array_from_indexes(input, idx))))
             .filter(|(_, v): &(_, [char; 3])| v == &PART2_TARGET)
-            .collect::<Vec<_>>();
-        let crosses = crosses
+            .map(|((coord, dir), _)| (coord, dir))
+            .for_each(|(coord, dir)| {
+                map.entry(coord).or_insert_with(Vec::new).push(dir);
+            });
+
+        Ok(map
             .iter()
-            .tuple_combinations()
-            .filter(|(a, b)| a.0 .0 == b.0 .0)
-            .filter(|(a, b)| perpendicular(a.0 .1, b.0 .1));
-        Ok(crosses.count())
+            .filter(|&(_, v)| v.len() > 1)
+            .flat_map(|(_, v)| {
+                v.iter()
+                    .tuple_combinations()
+                    .filter(|&(a, b)| perpendicular(*a, *b))
+            })
+            .count())
     }
 }
 

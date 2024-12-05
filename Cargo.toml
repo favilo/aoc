@@ -1,3 +1,18 @@
 [workspace]
 members = ["aoc2024", "utils"]
 resolver = "2"
+
+[profile.release]
+opt-level = 3
+debug = true
+incremental = true
+
+[profile.bench]
+opt-level = 3
+debug = true
+# lto = "thin"
+incremental = true
+
+[profile.test]
+opt-level = 3
+debug = true

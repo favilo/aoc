@@ -41,6 +41,16 @@ Though not required, this just doesn't have as nice output, and will deprecate p
 cargo bench
 ```
 
+### Profiling
+
+The `cpuprofiler` and `pprof` crates are used to profile the benchmark code.
+
+Enable profiling with:
+
+```sh
+cargo bench --bench criterion -- --profile-time=10
+```
+
 ## Timings
 
 ```
@@ -56,9 +66,9 @@ day03/get_input         time:   [115.21 µs 115.31 µs 115.43 µs]
 day03/part1             time:   [286.51 ns 286.89 ns 287.56 ns]
 day03/part2             time:   [384.34 ns 384.55 ns 384.78 ns]
 
-day04/get_input         time:   [35.918 µs 36.072 µs 36.212 µs]
-day04/part1             time:   [225.63 µs 225.88 µs 226.19 µs]
-day04/part2             time:   [10.010 ms 10.046 ms 10.091 ms]
+day04/get_input         time:   [35.461 µs 35.500 µs 35.541 µs]
+day04/part1             time:   [293.84 µs 293.92 µs 294.02 µs]
+day04/part2             time:   [1.1441 ms 1.1454 ms 1.1470 ms]
 
 ```
 <details>

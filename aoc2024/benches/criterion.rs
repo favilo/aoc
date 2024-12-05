@@ -1,9 +1,11 @@
 use std::fs::read_to_string;
 
+use cpuprofiler::PROFILER;
+use criterion::profiler::Profiler;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use pprof::{criterion::Output, flamegraph::Options};
 
 use aoc2024::Runner;
-use pprof::{criterion::Output, flamegraph::Options};
 
 macro_rules! days {
     () => {};
@@ -51,8 +53,35 @@ fn custom() -> Criterion {
     let mut options = Options::default();
     options.flame_chart = true;
 
-    Criterion::default().with_profiler(pprof::criterion::PProfProfiler::new(
+    Criterion::default().with_profiler(MyProfiler::new(pprof::criterion::PProfProfiler::new(
         1000,
         Output::Flamegraph(Some(options)),
-    ))
+    )))
+}
+
+struct MyProfiler<'a, 'b> {
+    pprof: pprof::criterion::PProfProfiler<'a, 'b>,
+}
+
+impl<'a, 'b> MyProfiler<'a, 'b> {
+    fn new(pprof: pprof::criterion::PProfProfiler<'a, 'b>) -> Self {
+        Self { pprof }
+    }
+}
+
+impl Profiler for MyProfiler<'_, '_> {
+    fn start_profiling(&mut self, benchmark_id: &str, benchmark_dir: &std::path::Path) {
+        self.pprof.start_profiling(benchmark_id, benchmark_dir);
+        let fname = benchmark_dir.join(format!("{benchmark_id}.profile"));
+        PROFILER
+            .lock()
+            .unwrap()
+            .start(fname.to_str().unwrap())
+            .unwrap();
+    }
+
+    fn stop_profiling(&mut self, benchmark_id: &str, benchmark_dir: &std::path::Path) {
+        self.pprof.stop_profiling(benchmark_id, benchmark_dir);
+        PROFILER.lock().unwrap().stop().unwrap();
+    }
 }
