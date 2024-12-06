@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-
+use aoc_utils::collections::multimap::MultiMap;
 use itertools::Itertools;
 use miette::Result;
 use ndarray::Array2;
@@ -103,17 +102,14 @@ impl Runner for Day {
     }
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
-        let mut map = HashMap::new();
-        input
+        let map: MultiMap<_, _> = input
             .indexed_iter()
             .filter(|&(_, c)| c == &'M')
             .map(|(i, _)| index_iter::<3>(i, (input.nrows(), input.ncols())))
             .flat_map(|idxs| idxs.map(|(dir, idx)| (dir, slice_array_from_indexes(input, idx))))
             .filter(|(_, v): &(_, [char; 3])| v == &PART2_TARGET)
             .map(|((coord, dir), _)| (coord, dir))
-            .for_each(|(coord, dir)| {
-                map.entry(coord).or_insert_with(Vec::new).push(dir);
-            });
+            .collect();
 
         Ok(map
             .iter()

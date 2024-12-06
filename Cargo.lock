@@ -163,6 +163,7 @@ dependencies = [
  "fern",
  "hash32",
  "hash32-derive",
+ "hashbrown",
  "heapless",
  "home",
  "id_tree",
