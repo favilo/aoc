@@ -14,7 +14,7 @@ use hashbrown::{
     DefaultHashBuilder, HashMap, HashSet,
 };
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct MultiMap<K, V, S = DefaultHashBuilder, A: Allocator = Global> {
     inner: HashMap<K, HashSet<V, S, A>, S, A>,
 }
@@ -361,7 +361,7 @@ where
     }
 }
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct OrderedMultiMap<K, V, S = DefaultHashBuilder, A: Allocator = Global> {
     inner: HashMap<K, Vec<V>, S, A>,
 }
