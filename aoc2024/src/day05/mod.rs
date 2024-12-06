@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 
+use aoc_utils::collections::multimap::MultiMap;
 use miette::Result;
-use multimap::MultiMap;
 use winnow::{
     ascii::{dec_uint, line_ending},
     combinator::{repeat, separated, terminated},
@@ -32,8 +32,9 @@ impl Comparer {
     {
         let pairs: Vec<(usize, usize)> =
             repeat(1.., terminated(Self::rule, line_ending)).parse_next(input)?;
-        let rules = MultiMap::from_iter(pairs);
-        Ok(Self { rules })
+        Ok(Self {
+            rules: MultiMap::from_iter(pairs),
+        })
     }
 
     fn rule<S>(input: &mut S) -> PResult<(usize, usize)>
@@ -50,9 +51,9 @@ impl Comparer {
     }
 
     fn cmp(&self, a: usize, b: usize) -> Ordering {
-        if self.rules.get_vec(&a).map_or(false, |v| v.contains(&b)) {
+        if self.rules.get_all(&a).map_or(false, |v| v.contains(&b)) {
             Ordering::Less
-        } else if self.rules.get_vec(&b).map_or(false, |v| v.contains(&a)) {
+        } else if self.rules.get_all(&b).map_or(false, |v| v.contains(&a)) {
             Ordering::Greater
         } else {
             Ordering::Equal
@@ -171,6 +172,6 @@ mod tests {
 
     prod_case! {
         part1 = 4135;
-        part2 = 201684;
+        part2 = 5285;
     }
 }

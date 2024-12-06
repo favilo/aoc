@@ -13,3 +13,5 @@ reqwest = { version = "0.12.9", features = ["blocking"] }
 heapless = "0.8.0"
 winnow = "0.6.20"
 dotenv = "0.15.0"
+hashbrown = { version = "0.15.2", features = ["rayon", "serde"] }
+allocator-api2 = "0.2.21"

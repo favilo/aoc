@@ -1,3 +1,4 @@
+#![feature(allocator_api)]
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 pub mod collections;

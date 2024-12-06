@@ -1,3 +1,5 @@
+pub mod multimap;
+
 #[derive(Debug, Default, PartialEq, Eq)]
 #[repr(transparent)]
 pub struct HVec<T, const N: usize = 10>(heapless::Vec<T, N>);
