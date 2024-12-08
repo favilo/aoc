@@ -1,18 +1,15 @@
 use std::cell::Cell;
-use std::ops::{Add, AddAssign, Mul};
 use std::rc::Rc;
 
 use aoc_utils::collections::multimap::MultiMap;
+use aoc_utils::math::coord::Coord;
 use hashbrown::HashSet;
 use miette::Result;
-use rayon::iter::{IntoParallelRefIterator, ParallelBridge, ParallelIterator};
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
 use crate::Runner;
 
 pub struct Day;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Coord(isize, isize);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Direction {
@@ -51,29 +48,6 @@ pub struct Grid {
     dir: Direction,
 
     visited: MultiMap<Coord, Direction>,
-}
-
-impl Add for Coord {
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        Self(self.0 + rhs.0, self.1 + rhs.1)
-    }
-}
-
-impl AddAssign for Coord {
-    fn add_assign(&mut self, rhs: Self) {
-        self.0 += rhs.0;
-        self.1 += rhs.1;
-    }
-}
-
-impl Mul<isize> for Coord {
-    type Output = Self;
-
-    fn mul(self, rhs: isize) -> Self::Output {
-        Self(self.0 * rhs, self.1 * rhs)
-    }
 }
 
 impl Grid {
