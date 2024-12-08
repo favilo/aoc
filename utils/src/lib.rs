@@ -1,4 +1,5 @@
 #![feature(allocator_api)]
+#![feature(impl_trait_in_assoc_type)]
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 pub mod collections;
@@ -19,7 +20,8 @@ pub fn print_array(array: &Array2<usize>) {
     }
 }
 
-#[must_use] pub fn trim_ascii_whitespace(x: &[u8]) -> &[u8] {
+#[must_use]
+pub fn trim_ascii_whitespace(x: &[u8]) -> &[u8] {
     let from = match x.iter().position(|x| !x.is_ascii_whitespace()) {
         Some(i) => i,
         None => return &x[0..0],

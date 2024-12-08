@@ -142,6 +142,7 @@ dependencies = [
  "log",
  "miette",
  "ndarray",
+ "rayon",
  "reqwest",
  "winnow",
 ]

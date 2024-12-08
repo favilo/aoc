@@ -13,6 +13,7 @@ use hashbrown::{
     hash_map::{self, Entry, Keys},
     DefaultHashBuilder, HashMap, HashSet,
 };
+use rayon::iter::{IntoParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
 #[derive(Default, Clone)]
 pub struct MultiMap<K, V, S = DefaultHashBuilder, A: Allocator = Global> {
@@ -333,6 +334,22 @@ where
 
     fn into_iter(self) -> Self::IntoIter {
         self.inner.into_iter()
+    }
+}
+
+impl<'a, K, V, S, A> IntoParallelIterator for &'a MultiMap<K, V, S, A>
+where
+    K: Eq + Hash + Sync + Send,
+    V: Eq + Hash + Sync + Send,
+    S: BuildHasher + Default + Clone + Sync + Send,
+    A: Allocator + Default + Sync + Send,
+{
+    type Iter = impl ParallelIterator<Item = Self::Item>;
+
+    type Item = (&'a K, &'a HashSet<V, S, A>);
+
+    fn into_par_iter(self) -> Self::Iter {
+        self.inner.par_iter()
     }
 }
 

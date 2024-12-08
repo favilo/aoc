@@ -1,11 +1,11 @@
 use std::cell::Cell;
 use std::ops::{Add, AddAssign, Mul};
 use std::rc::Rc;
-use std::sync::Mutex;
 
 use aoc_utils::collections::multimap::MultiMap;
 use hashbrown::HashSet;
 use miette::Result;
+use rayon::iter::{IntoParallelRefIterator, ParallelBridge, ParallelIterator};
 
 use crate::Runner;
 
@@ -162,18 +162,16 @@ impl Runner for Day {
         grid.take_walk();
         let visited = grid.visited;
 
-        let mut new_obstacles = HashSet::new();
-        for (coord, _) in visited.iter() {
-            if *coord == start {
-                continue;
-            }
-            let mut new_grid = input.clone();
-            new_grid.obstacles.insert(*coord);
-            if new_grid.take_walk() {
-                new_obstacles.insert(*coord);
-            }
-        }
-        Ok(new_obstacles.len())
+        let new_obstacles =
+            visited
+                .par_iter()
+                .filter(|&(c, _)| *c != start)
+                .filter(|&(coord, _)| {
+                    let mut new_grid = input.clone();
+                    new_grid.obstacles.insert(*coord);
+                    new_grid.take_walk()
+                });
+        Ok(new_obstacles.count())
     }
 }
 

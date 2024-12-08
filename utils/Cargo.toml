@@ -15,3 +15,4 @@ winnow = "0.6.20"
 dotenv = "0.15.0"
 hashbrown = { version = "0.15.2", features = ["rayon", "serde"] }
 allocator-api2 = "0.2.21"
+rayon = "1.10.0"
