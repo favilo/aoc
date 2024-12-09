@@ -1,8 +1,10 @@
 use std::cell::Cell;
 use std::rc::Rc;
 
-use aoc_utils::collections::multimap::MultiMap;
-use aoc_utils::math::coord::Coord;
+use aoc_utils::{
+    collections::bitset::{BitSet, Dim, Dimension, FromBitSetIndex, ToBitSetIndex},
+    math::coord::Coord,
+};
 use hashbrown::HashSet;
 use miette::Result;
 
@@ -16,6 +18,31 @@ enum Direction {
     Down,
     Left,
     Right,
+}
+
+impl TryFrom<usize> for Direction {
+    type Error = ();
+
+    fn try_from(value: usize) -> std::result::Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Direction::Up),
+            1 => Ok(Direction::Right),
+            2 => Ok(Direction::Down),
+            3 => Ok(Direction::Left),
+            _ => Err(()),
+        }
+    }
+}
+
+impl From<Direction> for usize {
+    fn from(value: Direction) -> Self {
+        match value {
+            Direction::Up => 0,
+            Direction::Right => 1,
+            Direction::Down => 2,
+            Direction::Left => 3,
+        }
+    }
 }
 
 impl Direction {
@@ -38,16 +65,45 @@ impl Direction {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct Pair(Coord, Direction);
+
+impl From<(Coord, Direction)> for Pair {
+    fn from(value: (Coord, Direction)) -> Self {
+        Self(value.0, value.1)
+    }
+}
+
+impl ToBitSetIndex for Pair {
+    fn to_bitset_index(&self, dim: &Dim) -> usize {
+        let Pair(coord, dir) = self;
+        let dim = dim.bounds().expect("invalid bounds");
+        coord.0 as usize + coord.1 as usize * dim[0] + *dir as usize * dim[0] * dim[1]
+    }
+}
+
+impl FromBitSetIndex for Pair {
+    fn from_bitset_index(index: usize, dim: &Dim) -> Self {
+        let dim = dim.bounds().expect("invalid bounds");
+        let coord = Coord(
+            (index % dim[0]).try_into().unwrap(),
+            (index / dim[0] % dim[1]).try_into().unwrap(),
+        );
+        let dir = (index / dim[0] / dim[1]).try_into().unwrap();
+        Self(coord, dir)
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Grid {
     height: isize,
     width: isize,
-    obstacles: HashSet<Coord>,
+    obstacles: BitSet<Coord>,
     guard: Coord,
     start: Coord,
     dir: Direction,
 
-    visited: MultiMap<Coord, Direction>,
+    visited: BitSet<Pair>,
 }
 
 impl Grid {
@@ -70,15 +126,10 @@ impl Grid {
 
             self.guard = next;
             // if we are in a loop, we need to return true
-            if self
-                .visited
-                .get_all(&self.guard)
-                .map(|dirs| dirs.contains(&self.dir))
-                .unwrap_or(false)
-            {
+            if self.visited.contains(&Pair(self.guard, self.dir)) {
                 return true;
             }
-            self.visited.insert(self.guard, self.dir);
+            self.visited.insert(Pair(self.guard, self.dir));
         }
     }
 
@@ -86,7 +137,7 @@ impl Grid {
         self.guard = self.start;
         self.dir = Direction::Up;
         self.visited.clear();
-        self.visited.insert(self.guard, self.dir);
+        self.visited.insert(Pair(self.guard, self.dir));
     }
 }
 
@@ -101,24 +152,21 @@ impl Runner for Day {
         let height = input.lines().count() as isize;
         let width = input.lines().next().unwrap().len() as isize;
         let guard = Rc::new(Cell::new(Coord(0, 0)));
-        let obstacles = input
-            .lines()
-            .enumerate()
-            .flat_map(|(r, line)| {
-                line.chars()
-                    .enumerate()
-                    .map(move |(c, ch)| (c, r, ch))
-                    .filter_map(|(c, r, ch)| {
-                        if ch == '^' {
-                            guard.set(Coord(r as isize, c as isize));
-                        }
-                        (ch == '#').then_some(Coord(r as isize, c as isize))
-                    })
-            })
-            .collect();
+        let mut obstacles = BitSet::<Coord>::with_bounds(&[height as usize, width as usize]);
+        obstacles.extend(input.lines().enumerate().flat_map(|(r, line)| {
+            line.chars()
+                .enumerate()
+                .map(move |(c, ch)| (c, r, ch))
+                .filter_map(|(c, r, ch)| {
+                    if ch == '^' {
+                        guard.set(Coord(r as isize, c as isize));
+                    }
+                    (ch == '#').then_some(Coord(r as isize, c as isize))
+                })
+        }));
         let guard = guard.get();
-        let mut visited = MultiMap::new();
-        visited.insert(guard, Direction::Up);
+        let mut visited = BitSet::with_bounds(&[height as usize, width as usize]);
+        visited.insert(Pair(guard, Direction::Up));
         Ok(Grid {
             height,
             width,
@@ -135,22 +183,29 @@ impl Runner for Day {
         let mut grid = input.clone();
         grid.take_walk(None);
 
-        Ok(grid.visited.keys().count())
+        let coords = grid
+            .visited
+            .iter()
+            .map(|Pair(c, _)| c)
+            .collect::<HashSet<_>>();
+        Ok(coords.len())
     }
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
         let mut grid = input.clone();
         let start = grid.guard;
         grid.take_walk(None);
-        let visited = grid.visited.clone();
 
-        let new_obstacles = visited
+        let coords = grid
+            .visited
             .iter()
-            .filter(|&(c, _)| *c != start)
-            .filter(|&(coord, _)| {
-                grid.reset();
-                grid.take_walk(Some(*coord))
-            });
+            .map(|Pair(c, _)| c)
+            .collect::<HashSet<_>>();
+
+        let new_obstacles = coords.iter().filter(|&c| *c != start).filter(|&coord| {
+            grid.reset();
+            grid.take_walk(Some(*coord))
+        });
         Ok(new_obstacles.count())
     }
 }

@@ -135,6 +135,7 @@ name = "aoc-utils"
 version = "0.1.0"
 dependencies = [
  "allocator-api2",
+ "bit-set",
  "dotenv",
  "hashbrown",
  "heapless",

@@ -1,5 +1,6 @@
 #![feature(allocator_api)]
 #![feature(impl_trait_in_assoc_type)]
+#![feature(debug_closure_helpers)]
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 pub mod collections;

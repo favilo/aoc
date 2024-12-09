@@ -1,5 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, Neg, Sub};
 
+use crate::collections::bitset::{Dim, Dimension, FromBitSetIndex, ToBitSetIndex};
+
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Coord(pub isize, pub isize);
 
@@ -52,5 +54,19 @@ impl Coord {
             && self.0 < height.try_into().unwrap()
             && self.1 >= 0
             && self.1 < width.try_into().unwrap()
+    }
+}
+
+impl ToBitSetIndex for Coord {
+    fn to_bitset_index(&self, dim: &Dim) -> usize {
+        let dim = dim.bounds().expect("invalid bounds");
+        self.0 as usize + self.1 as usize * dim[0]
+    }
+}
+
+impl FromBitSetIndex for Coord {
+    fn from_bitset_index(index: usize, dim: &Dim) -> Self {
+        let dim = dim.bounds().expect("invalid bounds");
+        Self((index % dim[0]).try_into().unwrap(), (index / dim[0]).try_into().unwrap())
     }
 }
