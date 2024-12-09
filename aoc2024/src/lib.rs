@@ -1,4 +1,6 @@
 #![feature(associated_type_defaults)]
+#![feature(binary_heap_into_iter_sorted)]
+#![feature(debug_closure_helpers)]
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 use std::{
@@ -50,6 +52,7 @@ run_days!(
     day06 = 6,
     day07 = 7,
     day08 = 8,
+    day09 = 9,
 );
 
 pub trait Runner<Part1 = usize, Part2 = usize>
@@ -123,6 +126,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part1() -> miette::Result<()> {
+                    env_logger::init();
                     let input = $input;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -133,6 +137,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part2() -> miette::Result<()> {
+                    env_logger::init();
                     let input = $input;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
