@@ -269,12 +269,12 @@ mod tests {
     sample_case! {
         sample2 =>
             input = "2929293030303030309";
-            part1 = 1928;
+            part1 = 2642;
             part2 = 2642;
     }
 
     prod_case! {
         part1 = 6367087064415;
-        part2 = 201684;
+        part2 = 6390781891880;
     }
 }

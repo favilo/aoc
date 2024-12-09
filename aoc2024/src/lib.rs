@@ -126,7 +126,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part1() -> miette::Result<()> {
-                    env_logger::init();
+                    let _ = env_logger::try_init();
                     let input = $input;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -153,6 +153,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part1() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input = $input1;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -163,6 +164,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part2() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input = $input2;
                     println!("{}", input);
                     let input = Day::get_input(input)?;

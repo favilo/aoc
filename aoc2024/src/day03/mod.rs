@@ -22,7 +22,8 @@ pub enum Instruction {
 
 impl Instruction {
     #[inline]
-    #[must_use] pub fn total(&self) -> usize {
+    #[must_use]
+    pub fn total(&self) -> usize {
         match self {
             Instruction::Mul(a, b) => a * b,
             Instruction::Do => 0,
@@ -163,15 +164,9 @@ mod tests {
 
     sample_case! {
         sample1 =>
-            input = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
+            input1 = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
             part1 = 161;
-            part2 = 161;
-    }
-
-    sample_case! {
-        sample2 =>
-            input = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
-            part1 = 161;
+            input2 = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))";
             part2 = 48;
     }
 
