@@ -22,79 +22,45 @@ enum Operator {
     Concat,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-enum Continuation {
-    Done,
-    Error,
-}
-
 impl Equation {
     fn possible(&self) -> bool {
         // Backtracking algorithm to find if add or multiply is needed
-        self.solve(
-            &self.operands,
-            &mut vec![],
-            &[Operator::Add, Operator::Multiply],
-        ) == Continuation::Done
+        let (&this, rest) = self.operands.split_first().expect("empty list");
+        self.solve(rest, this, &[Operator::Add, Operator::Multiply])
     }
 
     fn possible_with_concat(&self) -> bool {
         // Backtracking algorithm to find if add or multiply is needed
+        let (&this, rest) = self.operands.split_first().expect("empty list");
         self.solve(
-            &self.operands,
-            &mut vec![],
+            rest,
+            this,
             &[Operator::Add, Operator::Multiply, Operator::Concat],
-        ) == Continuation::Done
+        )
     }
 
     /// Recursive function that figures out the correct operators to use
-    fn solve(
-        &self,
-        operands: &[usize],
-        operators: &mut Vec<Operator>,
-        choices: &[Operator],
-    ) -> Continuation {
-        if operands.len() == 1 {
-            return if self.apply(&self.operands, operators) == self.total {
-                Continuation::Done
-            } else {
-                Continuation::Error
-            };
+    fn solve(&self, remaining: &[usize], running_total: usize, choices: &[Operator]) -> bool {
+        if remaining.is_empty() {
+            return running_total == self.total;
         }
 
-        let operands_count = operands.len();
-        let total_operands = self.operands.len();
-        let left_operands = total_operands - operands_count;
-        // dbg!(operands_count, total_operands, left_operands);
-        // dbg!(&self.operands, operands, &operators);
-
-        if !operators.is_empty()
-            && self.apply(&self.operands[..left_operands], operators) >= self.total
-        {
-            return Continuation::Error;
+        if running_total > self.total {
+            return false;
         }
 
+        let (this, rest) = remaining.split_first().expect("empty list");
         for operator in choices {
-            operators.push(*operator);
-            match self.solve(&operands[1..], operators, choices) {
-                Continuation::Done => return Continuation::Done,
-                Continuation::Error => {}
-            }
-            operators.pop();
-        }
-        Continuation::Error
-    }
-
-    fn apply(&self, operands: &[usize], operators: &[Operator]) -> usize {
-        let mut total = operands[0];
-        for (&a, operator) in operands[1..].iter().zip(operators.iter().rev()) {
-            match operator {
-                Operator::Add => total += a,
-                Operator::Multiply => total *= a,
-                Operator::Concat => total = format!("{total}{a}").parse().unwrap(),
+            let this_total = match operator {
+                Operator::Add => running_total + this,
+                Operator::Multiply => running_total * this,
+                Operator::Concat => format!("{running_total}{this}").parse().unwrap(),
+            };
+            if self.solve(rest, this_total, choices) {
+                return true;
             }
         }
-        total
+        false
     }
 }
 
