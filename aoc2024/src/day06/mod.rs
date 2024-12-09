@@ -5,7 +5,6 @@ use aoc_utils::collections::multimap::MultiMap;
 use aoc_utils::math::coord::Coord;
 use hashbrown::HashSet;
 use miette::Result;
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
 use crate::Runner;
 
@@ -45,13 +44,14 @@ pub struct Grid {
     width: isize,
     obstacles: HashSet<Coord>,
     guard: Coord,
+    start: Coord,
     dir: Direction,
 
     visited: MultiMap<Coord, Direction>,
 }
 
 impl Grid {
-    fn take_walk(&mut self) -> bool {
+    fn take_walk(&mut self, extra_obstacle: Option<Coord>) -> bool {
         loop {
             let next = self.guard + self.dir.delta();
             if next.0 < 0 || next.0 >= self.height || next.1 < 0 || next.1 >= self.width {
@@ -60,7 +60,7 @@ impl Grid {
                 return false;
             }
 
-            if self.obstacles.contains(&next) {
+            if self.obstacles.contains(&next) || extra_obstacle.map_or(false, |c| c == next) {
                 // Hit obstacle
                 // println!("**** BUMP ****");
                 // self.visited.insert(self.guard, self.dir.turn());
@@ -80,6 +80,13 @@ impl Grid {
             }
             self.visited.insert(self.guard, self.dir);
         }
+    }
+
+    fn reset(&mut self) {
+        self.guard = self.start;
+        self.dir = Direction::Up;
+        self.visited.clear();
+        self.visited.insert(self.guard, self.dir);
     }
 }
 
@@ -117,6 +124,7 @@ impl Runner for Day {
             width,
             obstacles,
             guard,
+            start: guard,
             dir: Direction::Up,
 
             visited,
@@ -125,7 +133,7 @@ impl Runner for Day {
 
     fn part1(input: &Self::Input<'_>) -> Result<usize> {
         let mut grid = input.clone();
-        grid.take_walk();
+        grid.take_walk(None);
 
         Ok(grid.visited.keys().count())
     }
@@ -133,18 +141,16 @@ impl Runner for Day {
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
         let mut grid = input.clone();
         let start = grid.guard;
-        grid.take_walk();
-        let visited = grid.visited;
+        grid.take_walk(None);
+        let visited = grid.visited.clone();
 
-        let new_obstacles =
-            visited
-                .par_iter()
-                .filter(|&(c, _)| *c != start)
-                .filter(|&(coord, _)| {
-                    let mut new_grid = input.clone();
-                    new_grid.obstacles.insert(*coord);
-                    new_grid.take_walk()
-                });
+        let new_obstacles = visited
+            .iter()
+            .filter(|&(c, _)| *c != start)
+            .filter(|&(coord, _)| {
+                grid.reset();
+                grid.take_walk(Some(*coord))
+            });
         Ok(new_obstacles.count())
     }
 }

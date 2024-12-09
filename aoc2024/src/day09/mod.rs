@@ -3,7 +3,6 @@ use std::collections::BinaryHeap;
 use std::iter::repeat;
 
 use aoc_utils::parse::parse_int;
-use itertools::Itertools;
 use miette::Result;
 
 use crate::Runner;
