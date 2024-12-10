@@ -53,6 +53,7 @@ run_days!(
     day07 = 7,
     day08 = 8,
     day09 = 9,
+    day10 = 10,
 );
 
 pub trait Runner<Part1 = usize, Part2 = usize>
@@ -137,7 +138,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part2() -> miette::Result<()> {
-                    env_logger::init();
+                    let _ = env_logger::try_init();
                     let input = $input;
                     println!("{}", input);
                     let input = Day::get_input(input)?;

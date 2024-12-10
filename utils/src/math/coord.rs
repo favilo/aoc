@@ -57,6 +57,18 @@ impl Coord {
     }
 }
 
+impl From<(isize, isize)> for Coord {
+    fn from(value: (isize, isize)) -> Self {
+        Self(value.0, value.1)
+    }
+}
+
+impl From<(usize, usize)> for Coord {
+    fn from(value: (usize, usize)) -> Self {
+        Self(value.0 as isize, value.1 as isize)
+    }
+}
+
 impl ToBitSetIndex for Coord {
     fn to_bitset_index(&self, dim: &Dim) -> usize {
         let dim = dim.bounds().expect("invalid bounds");
@@ -67,6 +79,9 @@ impl ToBitSetIndex for Coord {
 impl FromBitSetIndex for Coord {
     fn from_bitset_index(index: usize, dim: &Dim) -> Self {
         let dim = dim.bounds().expect("invalid bounds");
-        Self((index % dim[0]).try_into().unwrap(), (index / dim[0]).try_into().unwrap())
+        Self(
+            (index % dim[0]).try_into().unwrap(),
+            (index / dim[0]).try_into().unwrap(),
+        )
     }
 }

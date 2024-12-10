@@ -46,9 +46,6 @@ macro_rules! benches {
         criterion_main!(benches);
     };
 }
-
-benches!(day01, day02, day03, day04, day05, day06, day07, day08, day09,);
-
 fn custom() -> Criterion {
     let mut options = Options::default();
     options.flame_chart = true;
@@ -88,3 +85,5 @@ impl Profiler for MyProfiler<'_, '_> {
         PROFILER.lock().unwrap().stop().unwrap();
     }
 }
+
+benches!(day01, day02, day03, day04, day05, day06, day07, day08, day09, day10,);

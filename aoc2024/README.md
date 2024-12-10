@@ -90,6 +90,11 @@ day09/get_input         time:   [289.46 µs 290.03 µs 290.83 µs]
 day09/part1             time:   [242.38 µs 243.45 µs 244.76 µs]
 day09/part2             time:   [55.630 ms 55.660 ms 55.696 ms]
 
+day10/get_input         time:   [9.8250 µs 9.8431 µs 9.8579 µs]
+day10/part1             time:   [225.61 µs 225.84 µs 226.14 µs]
+day10/part2             time:   [135.68 µs 135.74 µs 135.80 µs]
+
+
 ```
 <details>
 Original timings:
