@@ -71,8 +71,11 @@ impl<'a, 'b> MyProfiler<'a, 'b> {
 
 impl Profiler for MyProfiler<'_, '_> {
     fn start_profiling(&mut self, benchmark_id: &str, benchmark_dir: &std::path::Path) {
+        use std::fs::create_dir_all;
         self.pprof.start_profiling(benchmark_id, benchmark_dir);
-        let fname = benchmark_dir.join(format!("{benchmark_id}.profile"));
+        let fname = benchmark_dir.join("benchmark.profile");
+        create_dir_all(fname.parent().unwrap()).unwrap();
+        println!("\nStarting profiling to {}", fname.display());
         PROFILER
             .lock()
             .unwrap()

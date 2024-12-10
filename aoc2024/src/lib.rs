@@ -186,6 +186,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part1() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input_path = get_input_path(crate::YEAR, Day::day())?;
                     let input = read_to_string(input_path)
                         .into_diagnostic()
@@ -197,6 +198,7 @@ pub(crate) mod helpers {
 
                 #[test]
                 fn part2() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input_path = get_input_path(crate::YEAR, Day::day())?;
                     let input = read_to_string(input_path)
                         .into_diagnostic()

@@ -1,5 +1,4 @@
 use std::cmp::Reverse;
-use std::collections::BinaryHeap;
 use std::iter::repeat;
 
 use aoc_utils::parse::parse_int;
@@ -43,7 +42,7 @@ pub struct Disk {
     files: Vec<File>,
 
     /// The empty spaces on the disk
-    empties: BinaryHeap<Empty>,
+    empties: Vec<Empty>,
 }
 
 impl std::fmt::Debug for Disk {
@@ -70,7 +69,7 @@ impl Disk {
         let mut id = 0;
         let mut blocks = Vec::with_capacity(1024);
         let mut files = Vec::with_capacity(1024);
-        let mut empties = BinaryHeap::new();
+        let mut empties = Vec::new();
         for c in input.trim().bytes() {
             let size = parse_int(&[c]);
             let block_data = if is_file {
@@ -114,11 +113,14 @@ impl Disk {
 
     pub fn compact_files(&mut self) {
         let mut files = std::mem::take(&mut self.files);
+        let mut empties = std::mem::take(&mut self.empties);
         for this_file in files.iter_mut().rev() {
             log::debug!("Examining: {this_file:?}");
             log::debug!("Looking for empty with size {}", this_file.size);
-            log::debug!("Empties: {:?}", self.empties);
-            let Some(mut this_empty) = self.fetch_empty(this_file.size, this_file.location) else {
+            log::debug!("Empties: {:?}", &empties);
+            let Some((empty_idx, this_empty)) =
+                self.fetch_empty(&mut empties, this_file.size, this_file.location)
+            else {
                 continue;
             };
             log::debug!("Moving from {:?} to {:?}", this_file, this_empty);
@@ -127,17 +129,17 @@ impl Disk {
             this_empty.location += this_file.size;
             this_empty.size -= this_file.size;
 
-            if this_empty.size > 0 {
-                log::debug!("Pushing back: {this_empty:?}");
-                self.empties.push(this_empty);
+            if this_empty.size == 0 {
+                empties.remove(empty_idx);
             }
             self.merge_empties();
         }
 
         std::mem::swap(&mut self.files, &mut files);
+        std::mem::swap(&mut self.empties, &mut empties);
     }
 
-    fn move_file(&mut self, this_empty: Empty, this_file: &mut File) {
+    fn move_file(&mut self, this_empty: &Empty, this_file: &mut File) {
         let (before, after) = self
             .blocks
             .split_at_mut(this_empty.location + this_file.size);
@@ -145,11 +147,6 @@ impl Disk {
         before[this_empty.location..]
             .swap_with_slice(&mut after[after_start_idx..][..this_file.size]);
         log::debug!("Disk after copy blocks: {:?}", self.blocks);
-
-        self.empties.push(Empty {
-            location: this_file.location,
-            size: this_file.size,
-        });
 
         this_file.location = this_empty.location;
     }
@@ -185,30 +182,28 @@ impl Disk {
             .sum()
     }
 
-    fn fetch_empty(&mut self, size: usize, before: usize) -> Option<Empty> {
-        let empties = std::mem::take(&mut self.empties);
-        let mut found = None;
-        self.empties.extend(empties.into_iter_sorted().filter(|e| {
-            if e.size >= size && e.location < before && found.is_none() {
-                found = Some(*e);
-                false
-            } else {
-                true
-            }
-        }));
-        found
+    fn fetch_empty<'a>(
+        &mut self,
+        empties: &'a mut [Empty],
+        size: usize,
+        before: usize,
+    ) -> Option<(usize, &'a mut Empty)> {
+        empties.iter_mut().enumerate().find(|(_, e)| {
+            e.size >= size && e.location < before
+        })
     }
 
     fn merge_empties(&mut self) {
         let old_empties = std::mem::take(&mut self.empties);
         log::debug!("Merging before: {old_empties:?}");
 
-        let mut iter = old_empties.into_iter_sorted().filter(|e| e.size > 0);
+        let mut iter = old_empties.into_iter().filter(|e| e.size > 0);
         let Some(mut this) = iter.next() else {
             return;
         };
 
         iter.flat_map(|next| {
+            log::debug!("Merging: {this:?} and {next:?}");
             if this.location + this.size >= next.location {
                 this = Empty {
                     location: this.location,
