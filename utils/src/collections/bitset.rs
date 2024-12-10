@@ -44,7 +44,7 @@ impl Dimension for Dim {
     fn bounds(&self) -> Option<&[usize]> {
         match self {
             Dim::Unbounded => None,
-            Dim::Fixed(v) => Some(&v),
+            Dim::Fixed(v) => Some(v),
         }
     }
 

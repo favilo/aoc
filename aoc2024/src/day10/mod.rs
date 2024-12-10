@@ -14,10 +14,10 @@ pub struct Day;
 
 type Idx = (usize, usize);
 
-/// Breadth-first search
+/// Iterative Depth-first search with visited set
 /// Count the number of paths from start at 0 to end at 9
 /// monotonically increasing the value the entire time.
-fn bfs(array: &ArcArray2<usize>, start: Idx) -> usize {
+fn dfs_with_visited(array: &ArcArray2<usize>, start: Idx) -> usize {
     let mut visited = BitSet::<Coord>::with_bounds(array.shape());
     let shape = array.shape();
     let shape = (shape[0], shape[1]);
@@ -88,7 +88,10 @@ impl Runner for Day {
 
     fn part1(input: &Self::Input<'_>) -> Result<usize> {
         let (starts, array) = input.clone();
-        Ok(starts.iter().map(|&idx| bfs(&array, idx)).sum())
+        Ok(starts
+            .iter()
+            .map(|&idx| dfs_with_visited(&array, idx))
+            .sum())
     }
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
