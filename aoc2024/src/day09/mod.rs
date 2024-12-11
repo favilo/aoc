@@ -71,7 +71,7 @@ impl Disk {
         let mut files = Vec::with_capacity(1024);
         let mut empties = Vec::new();
         for c in input.trim().bytes() {
-            let size = parse_int(&[c]);
+            let size = parse_int([c]);
             let block_data = if is_file {
                 let this = Some(id);
                 files.push(File {
@@ -188,9 +188,10 @@ impl Disk {
         size: usize,
         before: usize,
     ) -> Option<(usize, &'a mut Empty)> {
-        empties.iter_mut().enumerate().find(|(_, e)| {
-            e.size >= size && e.location < before
-        })
+        empties
+            .iter_mut()
+            .enumerate()
+            .find(|(_, e)| e.size >= size && e.location < before)
     }
 
     fn merge_empties(&mut self) {

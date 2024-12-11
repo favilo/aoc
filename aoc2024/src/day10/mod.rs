@@ -74,7 +74,7 @@ impl Runner for Day {
         let v = input
             .lines()
             .map(str::as_bytes)
-            .flat_map(|line| line.iter().copied().map(|b| parse_int(&[b])))
+            .flat_map(|line| line.iter().copied().map(|b| parse_int([b])))
             .collect();
         let array = ArcArray2::from_shape_vec((height, width), v).unwrap();
         let starts = array

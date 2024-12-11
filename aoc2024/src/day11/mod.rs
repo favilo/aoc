@@ -49,11 +49,7 @@ impl Runner for Day {
 
     fn get_input(input: &str) -> Result<Self::Input<'_>> {
         Ok(Machine {
-            stones: input
-                .split_whitespace()
-                .map(str::as_bytes)
-                .map(parse_int)
-                .collect(),
+            stones: input.split_whitespace().map(parse_int).collect(),
         })
     }
 
@@ -69,7 +65,6 @@ impl Runner for Day {
         let mut machine = input.clone();
         Ok((0..75)
             .map(|i| (i, machine.step()))
-            // .inspect(|l| log::info!("{:?}", l))
             .last()
             .ok_or(miette::miette!("No steps"))?
             .1)
