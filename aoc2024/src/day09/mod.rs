@@ -1,7 +1,7 @@
 use std::cmp::Reverse;
 use std::iter::repeat;
 
-use aoc_utils::parse::parse_int;
+use aoc_utils::parse::parse_uint;
 use miette::Result;
 
 use crate::Runner;
@@ -71,7 +71,7 @@ impl Disk {
         let mut files = Vec::with_capacity(1024);
         let mut empties = Vec::new();
         for c in input.trim().bytes() {
-            let size = parse_int([c]);
+            let size = parse_uint([c]);
             let block_data = if is_file {
                 let this = Some(id);
                 files.push(File {

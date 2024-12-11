@@ -4,7 +4,7 @@ use std::sync::Arc;
 use aoc_utils::collections::bitset::BitSet;
 use aoc_utils::graph::four_neighbors;
 use aoc_utils::math::coord::Coord;
-use aoc_utils::parse::parse_int;
+use aoc_utils::parse::parse_uint;
 use miette::Result;
 use ndarray::ArcArray2;
 
@@ -74,7 +74,7 @@ impl Runner for Day {
         let v = input
             .lines()
             .map(str::as_bytes)
-            .flat_map(|line| line.iter().copied().map(|b| parse_int([b])))
+            .flat_map(|line| line.iter().copied().map(|b| parse_uint([b])))
             .collect();
         let array = ArcArray2::from_shape_vec((height, width), v).unwrap();
         let starts = array

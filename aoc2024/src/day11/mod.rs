@@ -1,7 +1,7 @@
 use std::iter::once;
 
 use aoc_utils::collections::multiset::HashMultiSet;
-use aoc_utils::parse::parse_int;
+use aoc_utils::parse::parse_uint;
 use miette::Result;
 
 use crate::Runner;
@@ -49,7 +49,7 @@ impl Runner for Day {
 
     fn get_input(input: &str) -> Result<Self::Input<'_>> {
         Ok(Machine {
-            stones: input.split_whitespace().map(parse_int).collect(),
+            stones: input.split_whitespace().map(parse_uint::<usize>).collect(),
         })
     }
 
