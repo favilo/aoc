@@ -43,20 +43,6 @@ macro_rules! run_days {
     };
 }
 
-run_days!(
-    day01 = 1,
-    day02 = 2,
-    day03 = 3,
-    day04 = 4,
-    day05 = 5,
-    day06 = 6,
-    day07 = 7,
-    day08 = 8,
-    day09 = 9,
-    day10 = 10,
-    day11 = 11,
-);
-
 pub trait Runner<Part1 = usize, Part2 = usize>
 where
     Part1: Debug,
@@ -216,3 +202,31 @@ pub(crate) mod helpers {
     pub(crate) use prod_case;
     pub(crate) use sample_case;
 }
+
+run_days!(
+    day01 = 1,
+    day02 = 2,
+    day03 = 3,
+    day04 = 4,
+    day05 = 5,
+    day06 = 6,
+    day07 = 7,
+    day08 = 8,
+    day09 = 9,
+    day10 = 10,
+    day11 = 11,
+    // day12 = 12,
+    // day13 = 13,
+    // day14 = 14,
+    // day15 = 15,
+    // day16 = 16,
+    // day17 = 17,
+    // day18 = 18,
+    // day19 = 19,
+    // day20 = 20,
+    // day21 = 21,
+    // day22 = 22,
+    // day23 = 23,
+    // day24 = 24,
+    // day25 = 25,
+);

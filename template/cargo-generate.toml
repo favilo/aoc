@@ -1,2 +1,5 @@
 [placeholders]
 year = { prompt = "What year is this for?", type = "string" }
+
+[hooks]
+post = ["post-script.rhai"]

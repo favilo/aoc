@@ -8,7 +8,12 @@ use pprof::{criterion::Output, flamegraph::Options};
 use {{ crate_name }}::Runner;
 
 // Parse this to prevent formatting from ruining template
-const YEAR: usize = "{{ year }}".parse().unwrap();
+pub const YEAR: usize = {
+    match usize::from_str_radix("{{ year }}", 10) {
+        Ok(year) => year,
+        _ => panic!("{{ year }} is not a valid number"),
+    }
+};
 
 macro_rules! days {
     () => {};
@@ -47,6 +52,11 @@ macro_rules! benches {
         );
 
         criterion_main!(benches);
+    };
+    () => {
+        pub fn main() {
+            panic!("No days defined");
+        }
     };
 }
 fn custom() -> Criterion {

@@ -15,9 +15,14 @@ use tracking_allocator::AllocationRegistry;
 use aoc_utils::utils::file::{download_input, get_input_path};
 
 mod errors;
-mod parsers;
 
-pub const YEAR: usize = "{{ year }}".parse().unwrap();
+// Parse this to prevent formatting from ruining template
+pub const YEAR: usize = {
+    match usize::from_str_radix("{{ year }}", 10) {
+        Ok(year) => year,
+        _ => panic!("{{ year }} is not a valid number"),
+    }
+};
 
 macro_rules! run_days {
     ($day:ident = $id:expr, $($days:ident = $ids:expr),* $(,)?) => {
@@ -39,6 +44,11 @@ macro_rules! run_days {
             }
 
             Ok(total_time)
+        }
+    };
+    () => {
+        pub fn run(_days: Vec<usize>, _track: bool) -> miette::Result<Duration> {
+            miette::bail!("No days specified")
         }
     };
 }
