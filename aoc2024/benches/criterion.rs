@@ -49,9 +49,12 @@ macro_rules! benches {
 fn custom() -> Criterion {
     let mut options = Options::default();
     options.flame_chart = true;
+    options.reverse_stack_order = true;
+    options.color_diffusion = true;
 
     Criterion::default().with_profiler(MyProfiler::new(pprof::criterion::PProfProfiler::new(
         1000,
+        // Output::Protobuf,
         Output::Flamegraph(Some(options)),
     )))
 }

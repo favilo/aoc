@@ -1,3 +1,4 @@
+use aoc_utils::math::concat_numbers;
 use miette::Result;
 use winnow::{
     ascii::{dec_uint, line_ending, space0},
@@ -54,7 +55,7 @@ impl Equation {
             let this_total = match operator {
                 Operator::Add => running_total + this,
                 Operator::Multiply => running_total * this,
-                Operator::Concat => format!("{running_total}{this}").parse().unwrap(),
+                Operator::Concat => concat_numbers(running_total, *this),
             };
             if self.solve(rest, this_total, choices) {
                 return true;
