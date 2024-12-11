@@ -1,4 +1,4 @@
-# Advent of Code TODO
+# Advent of Code {{ year }}
 
 ## Setup
 
@@ -41,13 +41,25 @@ Though not required, this just doesn't have as nice output, and will deprecate p
 cargo bench
 ```
 
+### Profiling
+
+The `cpuprofiler` and `pprof` crates are used to profile the benchmark code.
+
+Enable profiling with:
+
+```sh
+cargo bench --bench criterion -- --profile-time=10
+```
+
 ## Timings
 
 ```
-day01/get_input         time:   [52.690 µs 53.011 µs 53.374 µs]
-day01/part1             time:   [12.893 µs 13.110 µs 13.386 µs]
-day01/part2             time:   [31.882 µs 32.071 µs 32.310 µs]
 
 ```
 <details>
+Original timings:
+
+```
+
+```
 </details>

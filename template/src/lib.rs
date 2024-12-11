@@ -1,28 +1,29 @@
 #![feature(associated_type_defaults)]
-// #![feature(drain_filter)]
-// #![feature(hash_drain_filter)]
+#![feature(binary_heap_into_iter_sorted)]
+#![feature(debug_closure_helpers)]
+#![warn(clippy::all)]
+//#![warn(clippy::pedantic)]
 use std::{
     fmt::Debug,
     fs::read_to_string,
-    path::Path,
     time::{Duration, Instant},
 };
 
-use color_eyre::{eyre::Context, Result};
+use miette::{IntoDiagnostic, Result, WrapErr};
 use tracking_allocator::AllocationRegistry;
 
-use crate::utils::download_input;
+use aoc_utils::utils::file::{download_input, get_input_path};
 
+mod errors;
 mod parsers;
-mod utils;
 
-pub const YEAR: usize = 2024;
+pub const YEAR: usize = "{{ year }}".parse().unwrap();
 
 macro_rules! run_days {
     ($day:ident = $id:expr, $($days:ident = $ids:expr),* $(,)?) => {
         pub mod $day;
         $(pub mod $days;)*
-        pub fn run(days: Vec<usize>, track: bool) -> Result<Duration> {
+        pub fn run(days: Vec<usize>, track: bool) -> miette::Result<Duration> {
             let mut total_time = Duration::ZERO;
             if days.is_empty() {
                 total_time += $day::Day::run(track)?;
@@ -42,8 +43,6 @@ macro_rules! run_days {
     };
 }
 
-run_days!(day01 = 1,);
-
 pub trait Runner<Part1 = usize, Part2 = usize>
 where
     Part1: Debug,
@@ -54,18 +53,19 @@ where
     fn run(track: bool) -> Result<Duration> {
         let comment = Self::comment();
         let comment = if comment.is_empty() {
-            comment.to_owned()
+            String::new()
         } else {
-            format!(" : {}", comment)
+            format!(" : {comment}")
         };
         log::info!("Day {}{}\n", Self::day(), comment);
-        let input_path = format!("input/{}/day{:02}.txt", YEAR, Self::day());
-        if !Path::new(&input_path).exists() {
-            dotenv::dotenv().wrap_err("loading .env file")?;
-            let session = std::env::var("AOCSESSION").wrap_err("looking for AOCSESSION env var")?;
-            download_input(Self::day(), YEAR, &session, &input_path)?;
+        let input_full_path = get_input_path(YEAR, Self::day())?;
+        if !input_full_path.exists() {
+            let session = std::env::var("AOCSESSION")
+                .into_diagnostic()
+                .wrap_err("looking for AOCSESSION env var")?;
+            download_input(Self::day(), YEAR, &session, &input_full_path)?;
         }
-        let input = read_to_string(input_path)?;
+        let input = read_to_string(input_full_path).map_err(|e| miette::miette!("{e}"))?;
         let now = Instant::now();
         if track {
             AllocationRegistry::enable_tracking();
@@ -95,6 +95,7 @@ where
     }
 
     fn day() -> usize;
+    #[must_use]
     fn comment() -> &'static str {
         ""
     }
@@ -112,7 +113,8 @@ pub(crate) mod helpers {
                 use super::*;
 
                 #[test]
-                fn part1() -> Result<()> {
+                fn part1() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input = $input;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -122,7 +124,8 @@ pub(crate) mod helpers {
                 }
 
                 #[test]
-                fn part2() -> Result<()> {
+                fn part2() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input = $input;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -137,7 +140,8 @@ pub(crate) mod helpers {
                 use super::*;
 
                 #[test]
-                fn part1() -> Result<()> {
+                fn part1() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input = $input1;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -147,7 +151,8 @@ pub(crate) mod helpers {
                 }
 
                 #[test]
-                fn part2() -> Result<()> {
+                fn part2() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
                     let input = $input2;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -163,21 +168,29 @@ pub(crate) mod helpers {
         (part1 = $part1:expr; part2 = $part2:expr;) => {
             mod prod {
                 use super::*;
+                use aoc_utils::utils::file::get_input_path;
+                use miette::{IntoDiagnostic, WrapErr};
                 use std::fs::read_to_string;
 
                 #[test]
-                fn part1() -> Result<()> {
-                    let input_path = format!("input/{}/day{:02}.txt", crate::YEAR, Day::day());
-                    let input = read_to_string(input_path)?;
+                fn part1() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
+                    let input_path = get_input_path(crate::YEAR, Day::day())?;
+                    let input = read_to_string(input_path)
+                        .into_diagnostic()
+                        .wrap_err("failed to read input")?;
                     let input = Day::get_input(&input)?;
                     assert_eq!($part1, Day::part1(&input)?);
                     Ok(())
                 }
 
                 #[test]
-                fn part2() -> Result<()> {
-                    let input_path = format!("input/{}/day{:02}.txt", crate::YEAR, Day::day());
-                    let input = read_to_string(input_path)?;
+                fn part2() -> miette::Result<()> {
+                    let _ = env_logger::try_init();
+                    let input_path = get_input_path(crate::YEAR, Day::day())?;
+                    let input = read_to_string(input_path)
+                        .into_diagnostic()
+                        .wrap_err("failed to read input")?;
                     let input = Day::get_input(&input)?;
                     assert_eq!($part2, Day::part2(&input)?);
                     Ok(())
@@ -189,3 +202,31 @@ pub(crate) mod helpers {
     pub(crate) use prod_case;
     pub(crate) use sample_case;
 }
+
+run_days!(
+    // day01 = 1,
+    // day02 = 2,
+    // day03 = 3,
+    // day04 = 4,
+    // day05 = 5,
+    // day06 = 6,
+    // day07 = 7,
+    // day08 = 8,
+    // day09 = 9,
+    // day10 = 10,
+    // day11 = 11,
+    // day12 = 12,
+    // day13 = 13,
+    // day14 = 14,
+    // day15 = 15,
+    // day16 = 16,
+    // day17 = 17,
+    // day18 = 18,
+    // day19 = 19,
+    // day20 = 20,
+    // day21 = 21,
+    // day22 = 22,
+    // day23 = 23,
+    // day24 = 24,
+    // day25 = 25,
+);

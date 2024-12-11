@@ -1,4 +1,4 @@
-use color_eyre::Result;
+use miette::Result;
 
 use crate::Runner;
 
@@ -31,13 +31,13 @@ mod tests {
 
     sample_case! {
         sample1 =>
-            input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb";
-            part1 = 7;
-            part2 = 19;
+            input = "<REPLACE ME>";
+            part1 = todo!();
+            part2 = todo!();
     }
 
     prod_case! {
-        part1 = 1681;
-        part2 = 201684;
+        part1 = todo!();
+        part2 = todo!();
     }
 }
