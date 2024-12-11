@@ -54,6 +54,7 @@ run_days!(
     day08 = 8,
     day09 = 9,
     day10 = 10,
+    day11 = 11,
 );
 
 pub trait Runner<Part1 = usize, Part2 = usize>

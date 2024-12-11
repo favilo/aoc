@@ -49,7 +49,7 @@ macro_rules! benches {
 fn custom() -> Criterion {
     let mut options = Options::default();
     options.flame_chart = true;
-    options.reverse_stack_order = true;
+    // options.reverse_stack_order = true;
     options.color_diffusion = true;
 
     Criterion::default().with_profiler(MyProfiler::new(pprof::criterion::PProfProfiler::new(
@@ -89,4 +89,4 @@ impl Profiler for MyProfiler<'_, '_> {
     }
 }
 
-benches!(day01, day02, day03, day04, day05, day06, day07, day08, day09, day10,);
+benches!(day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11,);

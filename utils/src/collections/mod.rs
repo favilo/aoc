@@ -1,5 +1,6 @@
 pub mod bitset;
 pub mod multimap;
+pub mod multiset;
 
 #[derive(Debug, Default, PartialEq, Eq)]
 #[repr(transparent)]
