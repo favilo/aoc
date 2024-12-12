@@ -8,7 +8,7 @@ impl Runner for Day {
     type Input<'input> = Vec<()>;
 
     fn day() -> usize {
-        0 // FIXME
+        {{ day }}
     }
 
     fn get_input(input: &str) -> Result<Self::Input<'_>> {
@@ -31,13 +31,13 @@ mod tests {
 
     sample_case! {
         sample1 =>
-            input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb";
-            part1 = 7;
-            part2 = 19;
+            input = "<REPLACE ME>";
+            part1 = 0;
+            part2 = 0;
     }
 
     prod_case! {
-        part1 = 1681;
-        part2 = 201684;
+        part1 = 0;
+        part2 = 0;
     }
 }

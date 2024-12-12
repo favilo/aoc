@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign, Mul, Neg, Sub};
 
 use crate::collections::bitset::{Dim, Dimension, FromBitSetIndex, ToBitSetIndex};
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Coord(pub isize, pub isize);
 
 impl Add for Coord {
@@ -66,6 +66,18 @@ impl From<(isize, isize)> for Coord {
 impl From<(usize, usize)> for Coord {
     fn from(value: (usize, usize)) -> Self {
         Self(value.0 as isize, value.1 as isize)
+    }
+}
+
+impl From<Coord> for (isize, isize) {
+    fn from(value: Coord) -> Self {
+        (value.0, value.1)
+    }
+}
+
+impl From<Coord> for (usize, usize) {
+    fn from(value: Coord) -> Self {
+        (value.0 as usize, value.1 as usize)
     }
 }
 

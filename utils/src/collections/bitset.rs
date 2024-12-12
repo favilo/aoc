@@ -2,14 +2,15 @@ pub trait ToBitSetIndex {
     fn to_bitset_index(&self, dim: &Dim) -> usize;
 }
 
-impl<T> ToBitSetIndex for T
-where
-    T: Copy,
-    usize: TryFrom<T>,
-    <usize as TryFrom<T>>::Error: std::fmt::Debug,
-{
+impl ToBitSetIndex for usize {
     fn to_bitset_index(&self, _dim: &Dim) -> usize {
-        usize::try_from(*self).unwrap()
+        *self
+    }
+}
+
+impl ToBitSetIndex for char {
+    fn to_bitset_index(&self, _dim: &Dim) -> usize {
+        *self as usize
     }
 }
 
@@ -17,14 +18,15 @@ pub trait FromBitSetIndex {
     fn from_bitset_index(index: usize, dim: &Dim) -> Self;
 }
 
-impl<T> FromBitSetIndex for T
-where
-    T: Copy,
-    T: TryFrom<usize>,
-    <T as TryFrom<usize>>::Error: std::fmt::Debug,
-{
+impl FromBitSetIndex for usize {
     fn from_bitset_index(index: usize, _dim: &Dim) -> Self {
-        Self::try_from(index).unwrap()
+        index
+    }
+}
+
+impl FromBitSetIndex for char {
+    fn from_bitset_index(index: usize, _dim: &Dim) -> Self {
+        index as u8 as char
     }
 }
 
@@ -116,6 +118,15 @@ pub struct BitSet<T> {
     _marker: std::marker::PhantomData<T>,
 }
 
+impl<T> Default for BitSet<T>
+where
+    T: ToBitSetIndex,
+{
+    fn default() -> Self {
+        Self::unbounded()
+    }
+}
+
 impl<T> std::fmt::Debug for BitSet<T>
 where
     T: FromBitSetIndex + std::fmt::Debug,
@@ -199,6 +210,17 @@ where
         self.set
             .iter()
             .map(|index| T::from_bitset_index(index, &self.dim))
+    }
+}
+
+impl<A> FromIterator<A> for BitSet<A>
+where
+    A: ToBitSetIndex,
+{
+    fn from_iter<T: IntoIterator<Item = A>>(iter: T) -> Self {
+        let mut this = Self::default();
+        iter.into_iter().for_each(|i| this.insert(i));
+        this
     }
 }
 
