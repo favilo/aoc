@@ -1,13 +1,12 @@
-use std::collections::HashSet;
-
 use aoc_utils::{
     collections::multimap::{MultiMap, OrderedMultiMap},
     graph::four_neighbors_no_filter,
     math::coord::Coord,
 };
+use hashbrown::HashSet;
 use itertools::Itertools;
 use miette::Result;
-use pathfinding::prelude::connected_components;
+use pathfinding::prelude::ConnectedComponents;
 
 use crate::Runner;
 
@@ -48,11 +47,14 @@ impl Farm {
     pub fn regions(&self) -> impl Iterator<Item = (char, HashSet<Coord>)> + '_ {
         self.plots.iter().flat_map(|(c, coord_set)| {
             let starts = Vec::from_iter(coord_set.iter().copied());
-            connected_components(&starts, |&coord: &Coord| {
-                four_neighbors_no_filter::<isize>(coord.into())
-                    .map(Coord::from)
-                    .filter(|coord| coord_set.contains(coord))
-            })
+            ConnectedComponents::<Coord, Vec<_>, HashSet<_>, HashSet<_>>::connected_components(
+                &starts,
+                |&coord: &Coord| {
+                    four_neighbors_no_filter::<isize>(coord.into())
+                        .map(Coord::from)
+                        .filter(|coord| coord_set.contains(coord))
+                },
+            )
             .into_iter()
             .map(|set| (*c, set))
         })
