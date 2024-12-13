@@ -103,7 +103,7 @@ impl Farm {
 
     fn sides(&self, region: &HashSet<Coord>) -> usize {
         let mut fences = self.find_fences(region);
-        let sides = fences
+        fences
             .iter_mut()
             .map(|(key, coords)| {
                 coords.sort();
@@ -129,8 +129,7 @@ impl Farm {
                     .into_iter()
                     .count()
             })
-            .sum();
-        sides
+            .sum()
     }
 }
 
