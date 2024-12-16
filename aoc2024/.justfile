@@ -3,7 +3,7 @@ day day:
     day="$( python -c 'day=int("{{day}}");print(f"{day:02}")' )"
     echo "Creating day ${day}"
     set -x
-    mkdir -p "src/day${day}"
+    mkdir "src/day${day}"
     liquidjs -t @src/template/mod.rs \
         -c "{ \"day\": \"{{ day }}\" }" \
         -o "src/day${day}/mod.rs"

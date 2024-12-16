@@ -106,6 +106,10 @@ day13/get_input         time:   [40.192 µs 40.287 µs 40.404 µs]
 day13/part1             time:   [3.9342 µs 3.9349 µs 3.9357 µs]
 day13/part2             time:   [3.5701 µs 3.5720 µs 3.5744 µs]
 
+day14/get_input         time:   [42.556 µs 42.853 µs 43.237 µs]
+day14/part1             time:   [3.5187 µs 3.5613 µs 3.6284 µs]
+day14/part2             time:   [83.164 ms 83.296 ms 83.493 ms]
+
 ```
 <details>
 Original timings:

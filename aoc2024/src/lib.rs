@@ -1,6 +1,7 @@
 #![feature(associated_type_defaults)]
 #![feature(binary_heap_into_iter_sorted)]
 #![feature(debug_closure_helpers)]
+#![feature(ascii_char)]
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 use std::{
@@ -217,7 +218,7 @@ run_days!(
     day11 = 11,
     day12 = 12,
     day13 = 13,
-    // day14 = 14,
+    day14 = 14,
     // day15 = 15,
     // day16 = 16,
     // day17 = 17,
