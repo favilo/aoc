@@ -2,8 +2,20 @@ use std::ops::{Add, AddAssign, Mul, Neg, Sub};
 
 use crate::collections::bitset::{Dim, Dimension, FromBitSetIndex, ToBitSetIndex};
 
-#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Coord(pub isize, pub isize);
+
+impl std::fmt::Debug for Coord {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "[{},{}]", self.0, self.1)
+    }
+}
+
+impl std::fmt::Display for Coord {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::Debug::fmt(self, f)
+    }
+}
 
 impl Add for Coord {
     type Output = Self;
@@ -54,6 +66,14 @@ impl Coord {
             && self.0 < height.try_into().unwrap()
             && self.1 >= 0
             && self.1 < width.try_into().unwrap()
+    }
+
+    pub fn sq_magnitude(self) -> isize {
+        self.0.pow(2) + self.1.pow(2)
+    }
+
+    pub fn abs(self) -> Coord {
+        Self(self.0.abs(), self.1.abs())
     }
 }
 

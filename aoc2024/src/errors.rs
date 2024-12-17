@@ -7,6 +7,12 @@ use winnow::{
     PResult,
 };
 
+#[derive(Debug, thiserror::Error)]
+pub enum Error {
+    #[error("invalid input: {0}")]
+    InvalidInput(String),
+}
+
 #[allow(dead_code)]
 pub trait ToMiette<O> {
     fn to_miette(self) -> Result<O, miette::Report>;
