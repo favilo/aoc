@@ -2,6 +2,7 @@
 day day: 
     #!/bin/bash
     day="$( python -c 'day=int("{{day}}");print(f"{day:02}")' )"
+    set -e
     echo "Creating day ${day}"
     set -x
     mkdir "src/day${day}"
