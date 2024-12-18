@@ -80,12 +80,12 @@ pub fn get_input_path(year: usize, day: usize) -> Result<PathBuf, miette::Report
     let parent_path = env_path
         .parent()
         .ok_or_else(|| miette::miette!("no parent path for .env file"))?;
-    log::info!("Loaded .env file from {}", parent_path.display());
+    log::debug!("Loaded .env file from {}", parent_path.display());
     let input_full_path = if input_path.exists() {
         input_path
     } else {
         let joined_path = parent_path.join(&input_path);
-        log::info!("Joined path: {}", joined_path.display());
+        log::debug!("Joined path: {}", joined_path.display());
         joined_path.clone()
     };
     Ok(input_full_path)

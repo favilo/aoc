@@ -379,7 +379,7 @@ impl Runner<String> for Day {
         let mut machine = machine;
         machine.a = a as isize;
         let output = machine.run()?;
-        log::info!("Output from {a}: {output:?}");
+        log::debug!("Output from {a}: {output:?}");
         assert_eq!(output, bytes);
 
         Ok(a as usize)
@@ -418,12 +418,14 @@ fn get_potential_digits<'bytes>(
             let mut machine = machine.clone();
             machine.a = a;
             let output = machine.run().unwrap();
-            log::info!("Output from {a}: {output:?}");
+            log::debug!("Output from {a}: {output:?}");
             let these = &all_bytes[all_bytes.len() - output.len()..];
-            log::info!("Bytes: {:?}", these);
-            log::warn!("Same: {}", output == these);
+            log::debug!("Bytes: {:?}", these);
             if output == these {
-                queue.push_back((a, &bytes[..bytes.len() - 1]));
+                let next_bytes = &bytes[..bytes.len() - 1];
+                let entry = (a, next_bytes);
+                log::debug!("Pushing: {entry:?}");
+                queue.push_back(entry);
             }
         }
     }
