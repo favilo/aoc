@@ -136,7 +136,7 @@ mod tests {
                 Prize: X=18641, Y=10279\n\
             ";
             part1 = 480;
-            part2 = 875318608908;
+            part2 = 875318608908_usize;
     }
 
     prod_case! {

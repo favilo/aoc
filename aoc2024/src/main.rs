@@ -1,3 +1,4 @@
+use std::str::FromStr;
 use std::sync::atomic::AtomicBool;
 
 use clap::{ArgAction, Parser};
@@ -79,7 +80,12 @@ fn setup_logger() -> Result<()> {
                 message
             ))
         })
-        .level(log::LevelFilter::Info)
+        .level(
+            log::LevelFilter::from_str(
+                &std::env::var("RUST_LOG").unwrap_or_else(|_| "info".into()),
+            )
+            .into_diagnostic()?,
+        )
         .chain(std::io::stdout())
         // .chain(fern::log_file("output.log")?)
         .apply()

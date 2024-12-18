@@ -110,34 +110,7 @@ where
 #[cfg(test)]
 pub(crate) mod helpers {
     macro_rules! sample_case {
-        ($id:ident => input = $input:expr; part1 = $part1:expr; part2 = $part2:expr;) => {
-            mod $id {
-                use super::*;
-
-                #[test]
-                fn part1() -> miette::Result<()> {
-                    let _ = env_logger::try_init();
-                    let input = $input;
-                    println!("{}", input);
-                    let input = Day::get_input(input)?;
-                    println!("{:#?}", input);
-                    assert_eq!($part1, Day::part1(&input)?);
-                    Ok(())
-                }
-
-                #[test]
-                fn part2() -> miette::Result<()> {
-                    let _ = env_logger::try_init();
-                    let input = $input;
-                    println!("{}", input);
-                    let input = Day::get_input(input)?;
-                    println!("{:#?}", input);
-                    assert_eq!($part2, Day::part2(&input)?);
-                    Ok(())
-                }
-            }
-        };
-        ($id:ident => input1 = $input1:expr; part1 = $part1:expr; input2 = $input2:expr; part2 = $part2:expr;) => {
+        ($id:ident => input1 = $input1:expr; part1_r = $part1:expr; input2 = $input2:expr; part2_r = $part2:expr;) => {
             mod $id {
                 use super::*;
 
@@ -148,7 +121,13 @@ pub(crate) mod helpers {
                     println!("{}", input);
                     let input = Day::get_input(input)?;
                     println!("{:#?}", input);
-                    assert_eq!($part1, Day::part1(&input)?);
+                    let output = Day::part1(&input);
+                    if $part1.is_err() {
+                        assert!(output.is_err());
+                        assert_eq!($part1.unwrap_err().to_string(), output.unwrap_err().to_string())
+                    } else {
+                        assert_eq!($part1.unwrap(), output?);
+                    }
                     Ok(())
                 }
 
@@ -159,10 +138,23 @@ pub(crate) mod helpers {
                     println!("{}", input);
                     let input = Day::get_input(input)?;
                     println!("{:#?}", input);
-                    assert_eq!($part2, Day::part2(&input)?);
+                    if $part2.is_err() {
+                        assert!(Day::part2(&input).is_err());
+                    } else {
+                        assert_eq!($part2.unwrap(), Day::part2(&input)?);
+                    }
                     Ok(())
                 }
             }
+        };
+        ($id:ident => input1 = $input1:expr; part1_e = $part1_e:expr; input2 = $input2:expr; part2_e = $part2_e:expr;) => {
+            sample_case! { $id =>  input1 = $input1; part1_r = Err::<_, &'static str>($part1_e); input2 = $input2; part2_r = Err::<_, &'static str>($part2_e); }
+        };
+        ($id:ident => input1 = $input1:expr; part1 = $part1:expr; input2 = $input2:expr; part2 = $part2:expr;) => {
+            sample_case! { $id =>  input1 = $input1; part1_r = Ok::<_, &'static str>($part1); input2 = $input2; part2_r = Ok::<_, &'static str>($part2); }
+        };
+        ($id:ident => input = $input:expr; part1 = $part1:expr; part2 = $part2:expr;) => {
+            sample_case! { $id =>  input1 = $input; part1 = $part1; input2 = $input; part2 = $part2; }
         };
     }
 
@@ -222,7 +214,7 @@ run_days!(
     day14 = 14,
     day15 = 15,
     day16 = 16,
-    // day17 = 17,
+    day17 = 17,
     // day18 = 18,
     // day19 = 19,
     // day20 = 20,

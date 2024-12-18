@@ -80,7 +80,7 @@ mod tests {
         sample1 =>
             input = "125 17";
             part1 = 55312;
-            part2 = 65601038650482;
+            part2 = 65601038650482_usize;
     }
 
     prod_case! {
