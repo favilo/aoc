@@ -122,6 +122,10 @@ day17/get_input         time:   [322.97 ns 323.47 ns 324.00 ns]
 day17/part1             time:   [580.99 ns 581.84 ns 582.75 ns]
 day17/part2             time:   [89.339 µs 89.384 µs 89.433 µs]
 
+day18/get_input         time:   [139.98 µs 140.15 µs 140.32 µs]
+day18/part1             time:   [349.16 µs 349.28 µs 349.40 µs]
+day18/part2             time:   [9.2272 ms 9.2365 ms 9.2462 ms]
+
 ```
 <details>
 Original timings:
