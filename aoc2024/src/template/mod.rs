@@ -7,6 +7,7 @@ pub struct Day;
 impl Runner for Day {
     type Input<'input> = Vec<()>;
 
+    #[rustfmt::skip]
     fn day() -> usize {
         {{ day }}
     }
@@ -31,7 +32,9 @@ mod tests {
 
     sample_case! {
         sample1 =>
-            input = "<REPLACE ME>";
+            input = indoc::indoc! {"
+                <REPLACE ME>
+            "};
             part1 = 0;
             part2 = 0;
     }

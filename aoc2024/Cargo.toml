@@ -46,6 +46,7 @@ hashbrown = "0.15.2"
 pathfinding = "4.12.0"
 nalgebra = "0.33.2"
 ratatui = "0.29.0"
+indoc = "2.0.5"
 
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }

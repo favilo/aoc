@@ -110,13 +110,17 @@ where
 #[cfg(test)]
 pub(crate) mod helpers {
     macro_rules! sample_case {
-        ($id:ident => input1 = $input1:expr; part1_r = $part1:expr; input2 = $input2:expr; part2_r = $part2:expr;) => {
+        ($id:ident => preamble = $preamble:expr; input1 = $input1:expr; part1_r = $part1:expr; input2 = $input2:expr; part2_r = $part2:expr;) => {
             mod $id {
                 use super::*;
 
                 #[test]
                 fn part1() -> miette::Result<()> {
                     let _ = env_logger::try_init();
+                    #[allow(clippy::unused_unit)]
+                    {
+                        $preamble;
+                    };
                     let input = $input1;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -134,6 +138,10 @@ pub(crate) mod helpers {
                 #[test]
                 fn part2() -> miette::Result<()> {
                     let _ = env_logger::try_init();
+                    #[allow(clippy::unused_unit)]
+                    {
+                        $preamble;
+                    };
                     let input = $input2;
                     println!("{}", input);
                     let input = Day::get_input(input)?;
@@ -148,13 +156,16 @@ pub(crate) mod helpers {
             }
         };
         ($id:ident => input1 = $input1:expr; part1_e = $part1_e:expr; input2 = $input2:expr; part2_e = $part2_e:expr;) => {
-            sample_case! { $id =>  input1 = $input1; part1_r = Err::<_, &'static str>($part1_e); input2 = $input2; part2_r = Err::<_, &'static str>($part2_e); }
+            sample_case! { $id =>  preamble = {()}; input1 = $input1; part1_r = Err::<_, &'static str>($part1_e); input2 = $input2; part2_r = Err::<_, &'static str>($part2_e); }
         };
         ($id:ident => input1 = $input1:expr; part1 = $part1:expr; input2 = $input2:expr; part2 = $part2:expr;) => {
-            sample_case! { $id =>  input1 = $input1; part1_r = Ok::<_, &'static str>($part1); input2 = $input2; part2_r = Ok::<_, &'static str>($part2); }
+            sample_case! { $id =>  preamble = {()}; input1 = $input1; part1_r = Ok::<_, &'static str>($part1); input2 = $input2; part2_r = Ok::<_, &'static str>($part2); }
+        };
+        ($id:ident => preamble = $preamble:expr; input = $input:expr; part1 = $part1:expr; part2 = $part2:expr;) => {
+            sample_case! { $id =>  preamble = $preamble; input1 = $input; part1_r = Ok::<_, &'static str>($part1); input2 = $input; part2_r = Ok::<_, &'static str>($part2); }
         };
         ($id:ident => input = $input:expr; part1 = $part1:expr; part2 = $part2:expr;) => {
-            sample_case! { $id =>  input1 = $input; part1 = $part1; input2 = $input; part2 = $part2; }
+            sample_case! { $id =>  preamble = (); input = $input; part1 = $part1; part2 = $part2; }
         };
     }
 
