@@ -1,6 +1,7 @@
 use aoc_utils::{collections::multiset::HashMultiSet, math::coord::Coord};
 use hashbrown::HashSet;
 use miette::Result;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use winnow::{
     ascii::{dec_int, line_ending},
     combinator::{opt, repeat, separated_pair, terminated},
@@ -122,7 +123,8 @@ impl Runner for Day {
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
         // let lowest = (0..(input.width * input.height))
         // Make this smaller to make it faster... Feels like a hack, but it works fine.
-        let lowest = (0..8000)
+        let lowest = (0..(input.width * input.height))
+            .into_par_iter()
             .map(|i| (i, input.security_factor(i)))
             .min_by_key(|t| t.1);
         // lowest.iter().for_each(|(i, _)| {
