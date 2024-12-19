@@ -11,6 +11,7 @@ use std::{
     time::{Duration, Instant},
 };
 
+use heapless::{binary_heap::Max, BinaryHeap};
 use miette::{IntoDiagnostic, Result, WrapErr};
 use tracking_allocator::AllocationRegistry;
 
@@ -25,24 +26,140 @@ macro_rules! run_days {
     ($day:ident = $id:expr, $($days:ident = $ids:expr),* $(,)?) => {
         pub mod $day;
         $(pub mod $days;)*
-        pub fn run(days: Vec<usize>, track: bool) -> miette::Result<Duration> {
-            let mut total_time = Duration::ZERO;
+        pub fn run_all(days: Vec<usize>, track: bool) -> miette::Result<BinaryHeap<StageTime, Max, 125>> {
+            let mut heap = BinaryHeap::<StageTime, Max, 125>::new();
             if days.is_empty() {
-                total_time += $day::Day::run(track)?;
-                $(total_time += $days::Day::run(track)?;)*
+                run::<$day::Day, _, _>(track, &mut heap)?;
+                $(run::<$days::Day, _, _>(track, &mut heap)?;)*
             } else {
                 for day in days {
-                    total_time += match day {
-                        $id => $day::Day::run(track)?,
-                        $($ids => $days::Day::run(track)?,)*
+                    match day {
+                        $id => run::<$day::Day, _, _>(track, &mut heap)?,
+                        $($ids => run::<$days::Day, _, _>(track, &mut heap)?,)*
                         _ => panic!("Invalid day passed"),
-                    }
+                    };
                 }
             }
 
-            Ok(total_time)
+            Ok(heap)
         }
     };
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum Stage {
+    GetInput,
+    Part1,
+    Part2,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StageTime {
+    pub time: Duration,
+    day: usize,
+    stage: Stage,
+    comment: String,
+}
+
+impl PartialOrd for StageTime {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for StageTime {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.time.cmp(&other.time)
+    }
+}
+
+impl StageTime {
+    pub fn new<Part1, Part2, D: Runner<Part1, Part2>>(time: Duration, stage: Stage) -> Self
+    where
+        Part1: Debug,
+        Part2: Debug,
+    {
+        Self {
+            time,
+            stage,
+            day: D::day(),
+            comment: D::comment().to_string(),
+        }
+    }
+
+    pub fn log(&self, level: log::Level) {
+        let comment = if self.comment.is_empty() {
+            String::new()
+        } else {
+            format!(" - {}", self.comment)
+        };
+        log::log!(
+            level,
+            "Day{:02}/{:8?}  -->  {:?}{}",
+            self.day,
+            self.stage,
+            self.time,
+            comment,
+        )
+    }
+}
+
+fn run<R, Part1, Part2>(track: bool, heap: &mut BinaryHeap<StageTime, Max, 125>) -> Result<Duration>
+where
+    R: Runner<Part1, Part2>,
+    Part1: Debug,
+    Part2: Debug,
+{
+    let comment = R::comment();
+    let comment = if comment.is_empty() {
+        String::new()
+    } else {
+        format!(" : {comment}")
+    };
+    log::info!("Day {}{}\n", R::day(), comment);
+    let input_full_path = get_input_path(YEAR, R::day())?;
+    if !input_full_path.exists() {
+        let session = std::env::var("AOCSESSION")
+            .into_diagnostic()
+            .wrap_err("looking for AOCSESSION env var")?;
+        download_input(R::day(), YEAR, &session, &input_full_path)?;
+    }
+    let input = read_to_string(input_full_path).map_err(|e| miette::miette!("{e}"))?;
+    let now = Instant::now();
+    if track {
+        AllocationRegistry::enable_tracking();
+    }
+    let input = R::get_input(&input)?;
+    let elapsed_i = now.elapsed();
+    heap.push(StageTime::new::<Part1, Part2, R>(
+        elapsed_i,
+        Stage::GetInput,
+    ))
+    .map_err(|e| miette::miette!("Too many stages: {e:?}"))?;
+    log::info!("Generation took {:?}", elapsed_i);
+
+    let now = Instant::now();
+    let output1 = R::part1(&input);
+    let elapsed1 = now.elapsed();
+    let output1 = output1?;
+    log::info!("Part 1 - {:?}", output1);
+    heap.push(StageTime::new::<Part1, Part2, R>(elapsed1, Stage::Part1))
+        .map_err(|e| miette::miette!("Too many stages: {e:?}"))?;
+    log::info!("Took {:?}", elapsed1);
+
+    let now = Instant::now();
+    let output2 = R::part2(&input);
+    let elapsed2 = now.elapsed();
+    let output2 = output2?;
+    if track {
+        AllocationRegistry::disable_tracking();
+    }
+
+    log::info!("Part 2 - {:?}", output2);
+    heap.push(StageTime::new::<Part1, Part2, R>(elapsed2, Stage::Part2))
+        .map_err(|e| miette::miette!("Too many stages: {e:?}"))?;
+    log::info!("Took {:?}\n", elapsed2);
+    Ok(elapsed_i + elapsed1 + elapsed2)
 }
 
 pub trait Runner<Part1 = usize, Part2 = usize>
@@ -51,50 +168,6 @@ where
     Part2: Debug,
 {
     type Input<'input>;
-
-    fn run(track: bool) -> Result<Duration> {
-        let comment = Self::comment();
-        let comment = if comment.is_empty() {
-            String::new()
-        } else {
-            format!(" : {comment}")
-        };
-        log::info!("Day {}{}\n", Self::day(), comment);
-        let input_full_path = get_input_path(YEAR, Self::day())?;
-        if !input_full_path.exists() {
-            let session = std::env::var("AOCSESSION")
-                .into_diagnostic()
-                .wrap_err("looking for AOCSESSION env var")?;
-            download_input(Self::day(), YEAR, &session, &input_full_path)?;
-        }
-        let input = read_to_string(input_full_path).map_err(|e| miette::miette!("{e}"))?;
-        let now = Instant::now();
-        if track {
-            AllocationRegistry::enable_tracking();
-        }
-        let input = Self::get_input(&input)?;
-        let elapsed_i = now.elapsed();
-        log::info!("Generation took {:?}", elapsed_i);
-
-        let now = Instant::now();
-        let output1 = Self::part1(&input);
-        let elapsed1 = now.elapsed();
-        let output1 = output1?;
-        log::info!("Part 1 - {:?}", output1);
-        log::info!("Took {:?}", elapsed1);
-
-        let now = Instant::now();
-        let output2 = Self::part2(&input);
-        let elapsed2 = now.elapsed();
-        let output2 = output2?;
-        if track {
-            AllocationRegistry::disable_tracking();
-        }
-
-        log::info!("Part 2 - {:?}", output2);
-        log::info!("Took {:?}\n", elapsed2);
-        Ok(elapsed_i + elapsed1 + elapsed2)
-    }
 
     fn day() -> usize;
     #[must_use]
