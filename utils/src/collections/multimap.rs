@@ -15,9 +15,17 @@ use hashbrown::{
 };
 use rayon::iter::{IntoParallelIterator, IntoParallelRefIterator, ParallelIterator};
 
-#[derive(Default, Clone)]
+#[derive(Clone)]
 pub struct MultiMap<K, V, S = DefaultHashBuilder, A: Allocator = Global> {
     inner: HashMap<K, HashSet<V, S, A>, S, A>,
+}
+
+impl<K, V> Default for MultiMap<K, V, DefaultHashBuilder, Global> {
+    fn default() -> Self {
+        Self {
+            inner: HashMap::default(),
+        }
+    }
 }
 
 impl<K, V> MultiMap<K, V>

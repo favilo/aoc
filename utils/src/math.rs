@@ -21,4 +21,3 @@ pub fn median(l: &[usize]) -> usize {
 pub fn concat_numbers(a: usize, b: usize) -> usize {
     a * 10usize.pow(b.ilog10() + 1) + b
 }
-

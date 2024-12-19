@@ -500,7 +500,7 @@ mod tests {
             bytes: vec![1, 7],
             ..Default::default()
         };
-        assert_eq!(machine.run().unwrap(), []);
+        assert_eq!(machine.run().unwrap(), [0; 0]);
         assert_eq!(machine.b, 26);
     }
 
@@ -512,7 +512,7 @@ mod tests {
             bytes: vec![4, 0],
             ..Default::default()
         };
-        assert_eq!(machine.run().unwrap(), []);
+        assert_eq!(machine.run().unwrap(), [0; 0]);
         assert_eq!(machine.b, 44354);
     }
 

@@ -564,6 +564,10 @@ impl Runner for Day {
         15
     }
 
+    fn comment() -> &'static str {
+        "Run with `cargo run -F day15_ratatui --release -- -d 15` to get a simple UI"
+    }
+
     fn get_input(input: &str) -> Result<Self::Input<'_>> {
         Warehouse::parser.parse(Located::new(input)).to_miette()
     }
