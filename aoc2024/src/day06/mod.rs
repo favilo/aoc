@@ -75,6 +75,7 @@ impl From<(Coord, Direction)> for Pair {
 }
 
 impl ToBitSetIndex for Pair {
+    #[inline(always)]
     fn to_bitset_index(&self, dim: &Dim) -> usize {
         let Pair(coord, dir) = self;
         let dim = dim.bounds().expect("invalid bounds");
@@ -83,6 +84,7 @@ impl ToBitSetIndex for Pair {
 }
 
 impl FromBitSetIndex for Pair {
+    #[inline(always)]
     fn from_bitset_index(index: usize, dim: &Dim) -> Self {
         let dim = dim.bounds().expect("invalid bounds");
         let coord = Coord(
@@ -164,15 +166,14 @@ impl Runner for Day {
                     (ch == '#').then_some(Coord(r as isize, c as isize))
                 })
         }));
-        let guard = guard.get();
         let mut visited = BitSet::with_bounds(&[height as usize, width as usize]);
-        visited.insert(Pair(guard, Direction::Up));
+        visited.insert(Pair(guard.get(), Direction::Up));
         Ok(Grid {
             height,
             width,
             obstacles,
-            guard,
-            start: guard,
+            guard: guard.get(),
+            start: guard.get(),
             dir: Direction::Up,
 
             visited,
