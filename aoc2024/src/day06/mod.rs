@@ -7,6 +7,7 @@ use aoc_utils::{
 };
 use hashbrown::HashSet;
 use miette::Result;
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 
 use crate::Runner;
 
@@ -203,11 +204,14 @@ impl Runner for Day {
             .map(|Pair(c, _)| c)
             .collect::<HashSet<_>>();
 
-        let new_obstacles = coords.iter().filter(|&c| *c != start).filter(|&coord| {
-            grid.reset();
-            grid.take_walk(Some(*coord))
-        });
-        Ok(new_obstacles.count())
+        Ok(coords
+            .par_iter()
+            .filter(|&c| *c != start)
+            .filter(|&coord| {
+                let mut grid = input.clone();
+                grid.take_walk(Some(*coord))
+            })
+            .count())
     }
 }
 
