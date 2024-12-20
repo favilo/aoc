@@ -20,13 +20,21 @@ use aoc_utils::utils::file::{download_input, get_input_path};
 mod errors;
 mod parsers;
 
-pub const YEAR: usize = 2024;
+// Parse this to prevent formatting from ruining template
+pub const YEAR: usize = {
+    match usize::from_str_radix("2024", 10) {
+        Ok(year) => year,
+        _ => panic!("2024 is not a valid number"),
+    }
+};
+
+type Heap = BinaryHeap<StageTime, Max, 125>;
 
 macro_rules! run_days {
     ($day:ident = $id:expr, $($days:ident = $ids:expr),* $(,)?) => {
         pub mod $day;
         $(pub mod $days;)*
-        pub fn run_all(days: Vec<usize>, track: bool) -> miette::Result<BinaryHeap<StageTime, Max, 125>> {
+        pub fn run_all(days: Vec<usize>, track: bool) -> miette::Result<Heap> {
             let mut heap = BinaryHeap::<StageTime, Max, 125>::new();
             if days.is_empty() {
                 run::<$day::Day, _, _>(track, &mut heap)?;
@@ -42,6 +50,11 @@ macro_rules! run_days {
             }
 
             Ok(heap)
+        }
+    };
+    () => {
+        pub fn run(_days: Vec<usize>, _track: bool) -> miette::Result<Heap> {
+            miette::bail!("No days specified")
         }
     };
 }

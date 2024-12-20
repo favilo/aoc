@@ -1,4 +1,6 @@
+use std::str::FromStr;
 use std::sync::atomic::AtomicBool;
+use std::time::Duration;
 
 use clap::{ArgAction, Parser};
 use fern::colors::{Color, ColoredLevelConfig};
@@ -79,7 +81,12 @@ fn setup_logger() -> Result<()> {
                 message
             ))
         })
-        .level(log::LevelFilter::Info)
+        .level(
+            log::LevelFilter::from_str(
+                &std::env::var("RUST_LOG").unwrap_or_else(|_| "info".into()),
+            )
+            .into_diagnostic()?,
+        )
         .chain(std::io::stdout())
         // .chain(fern::log_file("output.log")?)
         .apply()
@@ -93,11 +100,14 @@ fn setup_logger() -> Result<()> {
 struct Args {
     #[arg(short, long, action=ArgAction::Append)]
     days: Vec<usize>,
-    #[arg(short = 't', long = "track")]
+    #[arg(long = "track")]
     track_allocations: bool,
 
     #[arg(short = 'p', long = "panic")]
     panic: bool,
+
+    #[arg(short = 't', long = "topn", default_value_t = 10)]
+    topn: usize,
 }
 
 fn main() -> Result<()> {
@@ -110,8 +120,21 @@ fn main() -> Result<()> {
         PANIC_ON_ALLOCATE.store(true, std::sync::atomic::Ordering::SeqCst);
     }
 
-    let time = {{ crate_name }}::run(days, args.track_allocations)?;
-    log::info!("Total Time: {:?}", time);
+    let mut times = {{ crate_name }}::run_all(days, args.track_allocations)?;
+
+    let mut total_time = Duration::ZERO;
+    let mut count = 0;
+    log::info!("Most expensive {} Stages:", args.topn);
+    while let Some(time) = times.pop() {
+        total_time += time.time;
+        count += 1;
+        if count >= args.topn {
+            continue;
+        }
+        time.log(log::Level::Info)
+    }
+    println!();
+    log::info!("Total Time: {:?}", total_time);
 
     Ok(())
 }
