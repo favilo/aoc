@@ -130,6 +130,10 @@ day19/get_input         time:   [491.36 µs 515.79 µs 539.79 µs]
 day19/part1             time:   [53.165 ms 53.194 ms 53.227 ms]
 day19/part2             time:   [54.904 ms 54.963 ms 55.021 ms]
 
+day20/get_input         time:   [532.51 µs 547.30 µs 562.81 µs]
+day20/part1             time:   [193.37 ms 195.07 ms 197.03 ms]
+day20/part2             time:   [201.46 ms 203.64 ms 205.97 ms]
+
 ```
 <details>
 Original timings:
