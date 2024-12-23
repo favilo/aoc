@@ -76,6 +76,18 @@ impl Coord {
         (self.0 - other.0).unsigned_abs() + (self.1 - other.1).unsigned_abs()
     }
 
+    pub fn x_distance(self, other: Self) -> usize {
+        (self.0 - other.0).unsigned_abs()
+    }
+
+    pub fn y_distance(self, other: Self) -> usize {
+        (self.1 - other.1).unsigned_abs()
+    }
+
+    pub fn sq_distance(self, other: Self) -> usize {
+        (self.0 - other.0).unsigned_abs().pow(2) + (self.1 - other.1).unsigned_abs().pow(2)
+    }
+
     pub fn abs(self) -> Coord {
         Self(self.0.abs(), self.1.abs())
     }

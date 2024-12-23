@@ -172,9 +172,8 @@ impl Maze {
     pub fn path(&self) -> Option<Vec<Coord>> {
         let path = pathfinding::directed::astar::astar(
             &self.start,
-            |c| {
-                four_neighbors(c.into(), (self.width, self.height))
-                    .map(Coord::from)
+            |&c| {
+                four_neighbors(c, (self.width, self.height))
                     .filter(|c| self.map.get(c) != Some(&Cell::Wall))
                     .map(|c| (c, 1))
             },

@@ -103,7 +103,6 @@ pub struct Grid {
     width: isize,
     obstacles: BitSet<Coord>,
     guard: Coord,
-    start: Coord,
     dir: Direction,
 
     visited: BitSet<Pair>,
@@ -134,13 +133,6 @@ impl Grid {
             }
             self.visited.insert(Pair(self.guard, self.dir));
         }
-    }
-
-    fn reset(&mut self) {
-        self.guard = self.start;
-        self.dir = Direction::Up;
-        self.visited.clear();
-        self.visited.insert(Pair(self.guard, self.dir));
     }
 }
 
@@ -174,7 +166,6 @@ impl Runner for Day {
             width,
             obstacles,
             guard: guard.get(),
-            start: guard.get(),
             dir: Direction::Up,
 
             visited,

@@ -1,14 +1,16 @@
 use num::cast::AsPrimitive;
 use num::Num;
 
-pub fn four_neighbors<N>(idx: (N, N), shape: (N, N)) -> impl Iterator<Item = (N, N)>
+pub fn four_neighbors<I, N>(idx: I, shape: (N, N)) -> impl Iterator<Item = I>
 where
     N: Num + AsPrimitive<isize> + Copy + PartialOrd<N>,
     isize: AsPrimitive<N>,
+    I: Into<(N, N)> + From<(N, N)> + Copy,
 {
-    four_neighbors_no_filter(idx)
+    four_neighbors_no_filter(idx.into())
         .filter(|&(x, y)| x >= N::zero() && y >= N::zero())
         .filter(move |&(x, y)| x < shape.0 && y < shape.1)
+        .map(I::from)
 }
 
 pub fn four_neighbors_no_filter<N>(idx: (N, N)) -> impl Iterator<Item = (N, N)>

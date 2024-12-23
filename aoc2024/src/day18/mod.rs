@@ -48,8 +48,7 @@ impl Runner<usize, String> for Day {
         let path = pathfinding::directed::astar::astar(
             &Coord(0, 0),
             |&c| {
-                four_neighbors(c.into(), (limit + 1, limit + 1))
-                    .map(Coord::from)
+                four_neighbors(c, (limit + 1, limit + 1))
                     .filter(|c| !memory.contains(c))
                     .map(|c| (c, 1))
             },
@@ -69,8 +68,7 @@ impl Runner<usize, String> for Day {
             pathfinding::directed::astar::astar(
                 &Coord(0, 0),
                 |&c| {
-                    four_neighbors(c.into(), (limit + 1, limit + 1))
-                        .map(Coord::from)
+                    four_neighbors(c, (limit + 1, limit + 1))
                         .filter(|c| !memory.contains(c))
                         .map(|c| (c, 1))
                 },
@@ -89,8 +87,7 @@ impl Runner<usize, String> for Day {
                     let this_path = pathfinding::directed::astar::astar(
                         &Coord(0, 0),
                         |&c| {
-                            four_neighbors(c.into(), (limit + 1, limit + 1))
-                                .map(Coord::from)
+                            four_neighbors(c, (limit + 1, limit + 1))
                                 .filter(|c| !memory.contains(c))
                                 .map(|c| (c, 1))
                         },
