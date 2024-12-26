@@ -138,7 +138,12 @@ day21/get_input         time:   [173.97 ns 174.07 ns 174.20 ns]
 day21/part1             time:   [132.04 µs 132.19 µs 132.35 µs]
 day21/part2             time:   [1.1048 ms 1.1059 ms 1.1072 ms]
 
+day22/get_input         time:   [43.608 µs 43.652 µs 43.708 µs]
+day22/part1             time:   [9.4435 ms 9.4446 ms 9.4462 ms]
+day22/part2             time:   [79.802 ms 79.883 ms 79.983 ms]
+
 ```
+
 <details>
 Original timings:
 

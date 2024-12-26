@@ -244,6 +244,9 @@ pub(crate) mod helpers {
         ($id:ident => input1 = $input1:expr; part1_e = $part1_e:expr; input2 = $input2:expr; part2_e = $part2_e:expr;) => {
             sample_case! { $id =>  preamble = {()}; input1 = $input1; part1_r = Err::<_, &'static str>($part1_e); input2 = $input2; part2_r = Err::<_, &'static str>($part2_e); }
         };
+        ($id:ident => preamble = $preamble:expr; input1 = $input1:expr; part1 = $part1:expr; input2 = $input2:expr; part2 = $part2:expr;) => {
+            sample_case! { $id =>  preamble = $preamble; input1 = $input1; part1_r = Ok::<_, &'static str>($part1); input2 = $input2; part2_r = Ok::<_, &'static str>($part2); }
+        };
         ($id:ident => input1 = $input1:expr; part1 = $part1:expr; input2 = $input2:expr; part2 = $part2:expr;) => {
             sample_case! { $id =>  preamble = {()}; input1 = $input1; part1_r = Ok::<_, &'static str>($part1); input2 = $input2; part2_r = Ok::<_, &'static str>($part2); }
         };
@@ -316,7 +319,7 @@ run_days!(
     day19 = 19,
     day20 = 20,
     day21 = 21,
-    // day22 = 22,
+    day22 = 22,
     // day23 = 23,
     // day24 = 24,
     // day25 = 25,
