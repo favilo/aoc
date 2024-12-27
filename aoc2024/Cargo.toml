@@ -49,6 +49,7 @@ ratatui = "0.29.0"
 indoc = "2.0.5"
 trie-rs = "0.4.2"
 cached = "0.54.0"
+layout-rs = "0.1.2"
 
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }

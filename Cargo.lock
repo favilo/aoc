@@ -176,6 +176,7 @@ dependencies = [
  "id_tree",
  "indoc",
  "itertools 0.13.0",
+ "layout-rs",
  "log",
  "miette",
  "mimalloc",
@@ -1515,6 +1516,12 @@ dependencies = [
  "once_cell",
  "wasm-bindgen",
 ]
+
+[[package]]
+name = "layout-rs"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "84deb28a3a6c839ca42a7341664f32281416d69e2f29deb85aec5cc0243fdea8"
 
 [[package]]
 name = "lazy_static"

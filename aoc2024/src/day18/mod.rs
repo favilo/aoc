@@ -89,6 +89,7 @@ impl Runner<usize, String> for Day {
                         |&c| {
                             four_neighbors(c, (limit + 1, limit + 1))
                                 .filter(|c| !memory.contains(c))
+                                .map(Coord::from)
                                 .map(|c| (c, 1))
                         },
                         |_| 1,
