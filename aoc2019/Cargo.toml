@@ -1,0 +1,64 @@
+[package]
+name = "aoc2019"
+version = "0.1.0"
+edition = "2021"
+resolver = "2"
+
+[lib]
+bench = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+aoc-utils = { path = "../utils" }
+
+bit-set = "0.8.0"
+byte_set = "0.1.3"
+chrono = "0.4.23"
+clap = { version = "4.5.21", features = ["derive"] }
+color-eyre = "0.6.2"
+counter = "0.6.0"
+cpuprofiler = "0.0.4"
+dotenv = "0.15.0"
+fern = { version = "0.7.0", features = ["colored"] }
+hash32 = "0.3.1"
+hash32-derive = "0.1.1"
+hashbrown = "0.15.2"
+heapless = "0.8.0"
+home = "0.5.4"
+id_tree = "1.8.0"
+itertools = "0.13.0"
+konst = "0.3.15"
+log = "0.4.17"
+miette = { version = "7.4.0", features = ["fancy"] }
+mimalloc = { version = "0.1.32", default-features = false }
+multimap = "0.10.0"
+multiset = "0.0.5"
+ndarray = { version = "0.16.1", features = ["rayon"] }
+num = "0.4.3"
+once_cell = "1.20.2"
+petgraph = "0.6.5"
+rayon = "1.10.0"
+reqwest = { version = "0.12.9", features = ["blocking"] }
+text_io = "0.1.12"
+thiserror = "2.0.3"
+tqdm = "0.7.0"
+tracking-allocator = "0.4.0"
+winnow = { version = "0.6.20", features = ["simd"] }
+
+[dev-dependencies]
+criterion = { version = "0.5.1", features = ["html_reports"] }
+env_logger = "0.11.5"
+pprof = { version = "0.14.0", features = [
+    "flamegraph",
+    "criterion",
+    "protobuf-codec",
+] }
+
+[[bench]]
+name = "criterion"
+harness = false
+# required_features = ["disable_for_tests"]
+
+[features]
+disable_for_tests = []
