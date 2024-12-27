@@ -5,7 +5,7 @@ use criterion::profiler::Profiler;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use pprof::{criterion::Output, flamegraph::Options};
 
-use aoc2024::Runner;
+use aoc_utils::Runner;
 
 macro_rules! days {
     () => {};

@@ -5,7 +5,7 @@ use criterion::profiler::Profiler;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use pprof::{criterion::Output, flamegraph::Options};
 
-use {{ crate_name }}::Runner;
+use aoc_utils::Runner;
 
 // Parse this to prevent formatting from ruining template
 pub const YEAR: usize = {
