@@ -6,11 +6,7 @@
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 
-use heapless::{binary_heap::Max, BinaryHeap};
-
-use aoc_utils::{run_days, StageTime};
-
-mod parsers;
+use aoc_utils::run_days;
 
 // Parse this to prevent formatting from ruining template
 pub const YEAR: usize = {

@@ -2,7 +2,8 @@
 #[allow(clippy::crate_in_macro_def)]
 macro_rules! run_days {
     ($day:ident = $id:expr, $($days:ident = $ids:expr),* $(,)?) => {
-        use aoc_utils::{run, Heap};
+        use aoc_utils::{run, Heap, StageTime};
+        use heapless::{binary_heap::Max, BinaryHeap};
 
         pub mod $day;
         $(pub mod $days;)*
