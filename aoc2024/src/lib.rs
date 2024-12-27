@@ -10,7 +10,6 @@ use heapless::{binary_heap::Max, BinaryHeap};
 
 use aoc_utils::{run_days, StageTime};
 
-mod errors;
 mod parsers;
 
 // Parse this to prevent formatting from ruining template

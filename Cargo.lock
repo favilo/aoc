@@ -147,6 +147,7 @@ dependencies = [
  "num",
  "rayon",
  "reqwest",
+ "thiserror 2.0.3",
  "tracking-allocator",
  "trie-rs",
  "winnow",

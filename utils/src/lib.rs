@@ -5,6 +5,7 @@
 //#![warn(clippy::pedantic)]
 pub mod collections;
 pub mod graph;
+pub mod errors;
 pub mod macros;
 pub mod math;
 pub mod parse;

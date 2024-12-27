@@ -18,7 +18,7 @@ use winnow::{
     seq, PResult, Parser,
 };
 
-use crate::errors::ToMiette;
+use aoc_utils::errors::ToMiette;
 use aoc_utils::Runner;
 
 pub struct Day;

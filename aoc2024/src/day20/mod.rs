@@ -17,8 +17,10 @@ use winnow::{
     PResult, Parser,
 };
 
-use crate::errors::{Error, ToMiette};
-use aoc_utils::Runner;
+use aoc_utils::{
+    errors::{Error, ToMiette},
+    Runner,
+};
 
 pub struct Day;
 

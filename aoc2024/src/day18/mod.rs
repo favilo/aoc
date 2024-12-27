@@ -10,7 +10,7 @@ use winnow::{
     PResult, Parser,
 };
 
-use crate::errors::ToMiette;
+use aoc_utils::errors::ToMiette;
 use aoc_utils::Runner;
 
 static LIMIT: AtomicUsize = AtomicUsize::new(70);
