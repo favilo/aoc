@@ -54,6 +54,10 @@ cargo bench --bench criterion -- --profile-time=10
 ## Timings
 
 ```
+day01/get_input         time:   [1.7799 µs 1.7826 µs 1.7854 µs]
+day01/part1             time:   [47.032 ns 47.067 ns 47.121 ns]
+day01/part2             time:   [588.45 ns 588.54 ns 588.63 ns]
+
 
 ```
 <details>

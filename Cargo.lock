@@ -175,6 +175,7 @@ dependencies = [
  "heapless",
  "home",
  "id_tree",
+ "indoc",
  "itertools 0.13.0",
  "konst",
  "log",
