@@ -18,7 +18,8 @@ use winnow::{
     seq, PResult, Parser,
 };
 
-use crate::{errors::ToMiette, Runner};
+use crate::errors::ToMiette;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -182,7 +183,7 @@ impl<'input> Circuit<'input> {
         let mut svg = SVGWriter::new();
         vg.do_it(false, false, false, &mut svg);
 
-        save_to_file("./graph.svg", &svg.finalize()).unwrap();
+        save_to_file("./day24-graph.svg", &svg.finalize()).unwrap();
     }
 
     fn ripple_adder_structure(&self) -> Vec<Cow<'input, str>> {
@@ -295,7 +296,7 @@ impl Runner<usize, String> for Day {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

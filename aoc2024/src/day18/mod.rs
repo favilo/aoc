@@ -11,7 +11,7 @@ use winnow::{
 };
 
 use crate::errors::ToMiette;
-use crate::Runner;
+use aoc_utils::Runner;
 
 static LIMIT: AtomicUsize = AtomicUsize::new(70);
 static COUNT: AtomicUsize = AtomicUsize::new(1024);
@@ -114,7 +114,7 @@ impl Runner<usize, String> for Day {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

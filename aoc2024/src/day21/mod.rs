@@ -1,14 +1,14 @@
-use std::fmt::Display;
-use std::{fmt::Debug, iter::once, ops::Deref};
+use std::{
+    fmt::{Debug, Display},
+    iter::once,
+    ops::Deref,
+};
 
-use aoc_utils::graph::four_neighbors;
-use aoc_utils::math::coord::Coord;
+use aoc_utils::{graph::four_neighbors, math::coord::Coord, Runner};
 use hashbrown::HashMap;
 use itertools::Itertools;
 use miette::Result;
 use pathfinding::directed::astar::astar_bag;
-
-use crate::Runner;
 
 pub struct Day;
 
@@ -337,7 +337,7 @@ mod tests {
     use hashbrown::HashSet;
 
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

@@ -147,6 +147,7 @@ dependencies = [
  "num",
  "rayon",
  "reqwest",
+ "tracking-allocator",
  "trie-rs",
  "winnow",
 ]

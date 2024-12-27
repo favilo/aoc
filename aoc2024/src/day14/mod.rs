@@ -10,7 +10,8 @@ use winnow::{
     PResult, Parser,
 };
 
-use crate::{errors::ToMiette, Runner};
+use crate::errors::ToMiette;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -159,7 +160,7 @@ fn print_grid(step: usize, set: &HashSet<Coord>, width: isize, height: isize) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

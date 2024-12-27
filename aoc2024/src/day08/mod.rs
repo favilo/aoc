@@ -3,7 +3,7 @@ use hashbrown::HashSet;
 use itertools::Itertools;
 use miette::Result;
 
-use crate::Runner;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -103,7 +103,7 @@ impl Runner for Day {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

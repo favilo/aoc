@@ -20,7 +20,8 @@ use winnow::{
     Located, PResult, Parser,
 };
 
-use crate::{errors::ToMiette, Runner};
+use crate::errors::ToMiette;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -601,7 +602,7 @@ impl Runner for Day {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         small1 =>

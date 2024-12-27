@@ -10,7 +10,8 @@ use winnow::{
     PResult, Parser,
 };
 
-use crate::{errors::ToMiette, Runner};
+use crate::errors::ToMiette;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -434,7 +435,7 @@ fn get_potential_digits<'bytes>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

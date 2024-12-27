@@ -2,13 +2,12 @@ use aoc_utils::{
     collections::multimap::{MultiMap, OrderedMultiMap},
     graph::four_neighbors_no_filter,
     math::coord::Coord,
+    Runner,
 };
 use hashbrown::HashSet;
 use itertools::Itertools;
 use miette::Result;
 use pathfinding::prelude::ConnectedComponents;
-
-use crate::Runner;
 
 pub struct Day;
 
@@ -176,7 +175,7 @@ impl Runner for Day {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

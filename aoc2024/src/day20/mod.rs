@@ -18,7 +18,7 @@ use winnow::{
 };
 
 use crate::errors::{Error, ToMiette};
-use crate::Runner;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -239,7 +239,7 @@ fn count_cheats(path: Vec<Coord>, max_dist: usize, limit: usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

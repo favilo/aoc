@@ -153,8 +153,6 @@ day24/part2             time:   [135.92 µs 135.97 µs 136.01 µs]
 day25/get_input         time:   [144.11 µs 144.50 µs 145.01 µs]
 day25/part1             time:   [485.25 µs 485.45 µs 485.64 µs]
 day25/part2             time:   [1.3148 ns 1.3211 ns 1.3277 ns]
-
-
 ```
 
 <details>

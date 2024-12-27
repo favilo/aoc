@@ -6,7 +6,7 @@ use miette::Result;
 use petgraph::prelude::GraphMap;
 use petgraph::Undirected;
 
-use crate::Runner;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -134,7 +134,7 @@ fn sorted_tuple<'input>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

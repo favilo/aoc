@@ -11,7 +11,7 @@ use winnow::{
     PResult, Parser,
 };
 
-use crate::Runner;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -112,7 +112,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>

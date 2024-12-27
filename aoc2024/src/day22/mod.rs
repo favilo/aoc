@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use itertools::{iterate, Itertools};
 use miette::{IntoDiagnostic, Result};
 
-use crate::Runner;
+use aoc_utils::Runner;
 
 pub struct Day;
 
@@ -114,7 +114,7 @@ fn price_changes(prices: impl Iterator<Item = u8> + Clone) -> impl Iterator<Item
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::helpers::{prod_case, sample_case};
+    use aoc_utils::{prod_case, sample_case};
 
     sample_case! {
         sample1 =>
@@ -138,8 +138,8 @@ mod tests {
     }
 
     prod_case! {
-        part1 = 0;
-        part2 = 0;
+        part1 = 18525593556;
+        part2 = 2089;
     }
 
     #[test]
