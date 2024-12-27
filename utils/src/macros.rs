@@ -26,6 +26,9 @@ macro_rules! run_days {
         }
     };
     () => {
+        use aoc_utils::{run, Heap, StageTime};
+        use heapless::{binary_heap::Max, BinaryHeap};
+
         pub fn run_all(_days: Vec<usize>, _track: bool) -> miette::Result<Heap> {
             miette::bail!("No days specified")
         }
