@@ -14,9 +14,11 @@ pub const YEAR: usize = {
     }
 };
 
+mod intcode;
+
 run_days!(
     day01 = 1,
-    // day02 = 2,
+    day02 = 2,
     // day03 = 3,
     // day04 = 4,
     // day05 = 5,

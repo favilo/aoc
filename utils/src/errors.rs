@@ -4,7 +4,6 @@ use miette::miette;
 use winnow::{
     error::{ParseError, ParserError},
     stream::{AsBStr, Stream},
-    PResult,
 };
 
 #[derive(Debug, thiserror::Error)]
@@ -18,19 +17,25 @@ pub trait ToMiette<O> {
     fn to_miette(self) -> Result<O, miette::Report>;
 }
 
-#[allow(dead_code)]
-impl<O, E> ToMiette<O> for PResult<O, E> {
+pub trait ToMietteErr {
+    fn to_miette(self) -> miette::Report;
+}
+
+impl<O, E> ToMiette<O> for Result<O, E>
+where
+    E: ToMietteErr,
+{
     fn to_miette(self) -> Result<O, miette::Report> {
-        todo!()
+        self.map_err(ToMietteErr::to_miette)
     }
 }
 
-impl<O, S, C> ToMiette<O> for Result<O, ParseError<S, C>>
+impl<S, C> ToMietteErr for ParseError<S, C>
 where
     S: Stream + AsBStr,
     C: ParserError<S> + Display + Debug,
 {
-    fn to_miette(self) -> Result<O, miette::Report> {
-        self.map_err(|e| miette!("{e}"))
+    fn to_miette(self) -> miette::Report {
+        miette!("{self}")
     }
 }

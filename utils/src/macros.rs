@@ -102,7 +102,7 @@ macro_rules! sample_case {
 #[macro_export]
 #[allow(clippy::crate_in_macro_def)]
 macro_rules! prod_case {
-    (part1 = $part1:expr; part2 = $part2:expr;) => {
+    (preamble = $preamble:expr; part1 = $part1:expr; part2 = $part2:expr;) => {
         mod prod {
             use super::*;
             use aoc_utils::utils::file::get_input_path;
@@ -112,6 +112,10 @@ macro_rules! prod_case {
             #[test]
             fn part1() -> miette::Result<()> {
                 let _ = env_logger::try_init();
+                #[allow(clippy::unused_unit)]
+                {
+                    $preamble;
+                };
                 let input_path = get_input_path(crate::YEAR, Day::day())?;
                 let input = read_to_string(input_path)
                     .into_diagnostic()
@@ -124,6 +128,10 @@ macro_rules! prod_case {
             #[test]
             fn part2() -> miette::Result<()> {
                 let _ = env_logger::try_init();
+                #[allow(clippy::unused_unit)]
+                {
+                    $preamble;
+                };
                 let input_path = get_input_path(crate::YEAR, Day::day())?;
                 let input = read_to_string(input_path)
                     .into_diagnostic()
@@ -133,5 +141,8 @@ macro_rules! prod_case {
                 Ok(())
             }
         }
+    };
+    (part1 = $part1:expr; part2 = $part2:expr;) => {
+        prod_case! { preamble = (); part1 = $part1; part2 = $part2; }
     };
 }
