@@ -105,7 +105,7 @@ impl Profiler for MyProfiler<'_, '_> {
 benches!(
     day01,
     day02,
-    // day03,
+    day03,
     // day04,
     // day05,
     // day06,

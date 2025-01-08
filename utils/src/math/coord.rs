@@ -40,6 +40,14 @@ impl Mul<isize> for Coord {
     }
 }
 
+impl Mul<usize> for Coord {
+    type Output = Self;
+
+    fn mul(self, rhs: usize) -> Self::Output {
+        Self(self.0 * rhs as isize, self.1 * rhs as isize)
+    }
+}
+
 impl Sub for Coord {
     type Output = Self;
 
@@ -70,6 +78,10 @@ impl Coord {
 
     pub fn sq_magnitude(self) -> isize {
         self.0.pow(2) + self.1.pow(2)
+    }
+
+    pub fn magnitude(self) -> usize {
+        self.0.unsigned_abs() + self.1.unsigned_abs()
     }
 
     pub fn manhattan_distance(self, other: Self) -> usize {

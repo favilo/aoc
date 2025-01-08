@@ -1,6 +1,9 @@
 #![feature(associated_type_defaults)]
 #![feature(binary_heap_into_iter_sorted)]
 #![feature(debug_closure_helpers)]
+#![feature(try_blocks)]
+#![feature(control_flow_enum)]
+
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 
@@ -19,7 +22,7 @@ mod intcode;
 run_days!(
     day01 = 1,
     day02 = 2,
-    // day03 = 3,
+    day03 = 3,
     // day04 = 4,
     // day05 = 5,
     // day06 = 6,
