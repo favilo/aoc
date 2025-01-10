@@ -23,7 +23,7 @@ run_days!(
     day01 = 1,
     day02 = 2,
     day03 = 3,
-    // day04 = 4,
+    day04 = 4,
     // day05 = 5,
     // day06 = 6,
     // day07 = 7,

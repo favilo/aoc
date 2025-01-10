@@ -19,5 +19,16 @@ pub fn median(l: &[usize]) -> usize {
 
 #[must_use]
 pub fn concat_numbers(a: usize, b: usize) -> usize {
-    a * 10usize.pow(b.ilog10() + 1) + b
+    a * 10usize.pow(digit_count(b)) + b
+}
+
+pub fn digit_count(b: usize) -> u32 {
+    b.ilog10() + 1
+}
+
+pub fn digits(n: usize) -> impl DoubleEndedIterator<Item = u8> + ExactSizeIterator {
+    (0..digit_count(n))
+        .map(move |exp| n / 10usize.pow(exp) % 10)
+        .map(u8::try_from)
+        .map(Result::unwrap)
 }
