@@ -40,6 +40,14 @@ impl Mul<isize> for Coord {
     }
 }
 
+impl Mul<i32> for Coord {
+    type Output = Self;
+
+    fn mul(self, rhs: i32) -> Self::Output {
+        Self(self.0 * rhs as isize, self.1 * rhs as isize)
+    }
+}
+
 impl Mul<usize> for Coord {
     type Output = Self;
 

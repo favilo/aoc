@@ -15,10 +15,11 @@ thread_local! {
 
 fn run(program: &mut Program, params: Option<(usize, usize)>) -> Result<usize, Error> {
     if let Some((noun, verb)) = params {
-        program[1] = noun;
-        program[2] = verb;
+        program[1] = noun as isize;
+        program[2] = verb as isize;
     }
-    program.run()
+    let _ = program.run(&mut &[][..])?;
+    Ok(program[0] as usize)
 }
 
 impl Runner for Day {
