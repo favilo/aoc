@@ -3,7 +3,6 @@
 #![feature(debug_closure_helpers)]
 #![feature(try_blocks)]
 #![feature(control_flow_enum)]
-
 #![warn(clippy::all)]
 //#![warn(clippy::pedantic)]
 
@@ -25,7 +24,7 @@ run_days!(
     day03 = 3,
     day04 = 4,
     day05 = 5,
-    // day06 = 6,
+    day06 = 6,
     // day07 = 7,
     // day08 = 8,
     // day09 = 9,
