@@ -1,6 +1,6 @@
 use miette::Result;
 
-use aoc_utils::Runner;
+use aoc_utils::{parse::parse_uint, Runner};
 
 pub struct Day;
 
@@ -20,20 +20,22 @@ impl Turn {
 
     /// Returns new position and how many times we passed zero
     pub fn rotate_pass_zero(&self, start: usize) -> (usize, usize) {
-        let mut count = 0;
+        let mut count;
         match self.direction {
             Direction::Left => {
-                let mut after_rotation = start as isize - self.value as isize;
+                let after_rotation = start as isize - self.value as isize;
                 count = self.value / 100;
-                if start != 0 && (after_rotation < 0 || after_rotation == 0) {
+                if start != 0 && (self.value % 100 > start || after_rotation.rem_euclid(100) == 0) {
                     count += 1;
                 }
                 (after_rotation.rem_euclid(100) as usize, count)
             }
             Direction::Right => {
-                let mut after_rotation = start + self.value;
+                let after_rotation = start + self.value;
                 count = self.value / 100;
-                if start != 0 && (after_rotation > 100 || after_rotation % 100 == 0) {
+                if start != 0
+                    && (self.value % 100 + start > 100 || after_rotation.is_multiple_of(100))
+                {
                     count += 1;
                 }
                 (after_rotation.rem_euclid(100), count)
@@ -69,10 +71,10 @@ impl Runner for Day {
     fn get_input(input: &str) -> Result<Self::Input<'_>> {
         Ok(input
             .lines()
+            .map(str::as_bytes)
             .map(|line| {
-                let mut chars = line.chars();
-                let dir = Direction::from_char(chars.next().unwrap()).unwrap();
-                let value: usize = chars.collect::<String>().parse().unwrap();
+                let dir = Direction::from_char(line[0] as char).unwrap();
+                let value: usize = parse_uint(&line[1..]);
                 Turn {
                     direction: dir,
                     value,
@@ -98,9 +100,9 @@ impl Runner for Day {
         let mut start = 50;
         let mut count_zero = 0;
         input.iter().for_each(|turn| {
-            let (new_start, passed) = dbg!(turn).rotate_pass_zero(start);
-            start = dbg!(new_start);
-            count_zero += dbg!(passed);
+            let (new_start, passed) = turn.rotate_pass_zero(start);
+            start = new_start;
+            count_zero += passed;
         });
 
         Ok(count_zero)

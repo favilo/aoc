@@ -198,7 +198,7 @@ where
     }
 }
 
-impl<'a, T> IntoIterator for &'a BitSet<T>
+impl<T> IntoIterator for &BitSet<T>
 where
     T: FromBitSetIndex,
 {
