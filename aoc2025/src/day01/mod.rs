@@ -17,6 +17,32 @@ impl Turn {
             Direction::Right => (start + self.value).rem_euclid(100),
         }
     }
+
+    /// Returns new position and how many times we passed zero
+    pub fn rotate_pass_zero(&self, start: usize) -> (usize, usize) {
+        let mut count = 0;
+        match self.direction {
+            Direction::Left => {
+                let mut value = start as isize - self.value as isize;
+                if value == 0 {
+                    count += 1;
+                }
+                while value < 0 {
+                    value += 100;
+                    count += 1;
+                }
+                (value.rem_euclid(100) as usize, count)
+            }
+            Direction::Right => {
+                let mut value = start + self.value;
+                while value >= 100 {
+                    value -= 100;
+                    count += 1;
+                }
+                (value.rem_euclid(100), count)
+            }
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -44,12 +70,16 @@ impl Runner for Day {
     }
 
     fn get_input(input: &str) -> Result<Self::Input<'_>> {
-        Ok(input.lines()
+        Ok(input
+            .lines()
             .map(|line| {
                 let mut chars = line.chars();
                 let dir = Direction::from_char(chars.next().unwrap()).unwrap();
                 let value: usize = chars.collect::<String>().parse().unwrap();
-                Turn { direction: dir, value }
+                Turn {
+                    direction: dir,
+                    value,
+                }
             })
             .collect())
     }
@@ -59,7 +89,7 @@ impl Runner for Day {
         let mut count_zero = 0;
         input.iter().for_each(|turn| {
             start = turn.rotate(start);
-            if dbg!(start) == 0 {
+            if start == 0 {
                 count_zero += 1;
             }
         });
@@ -68,7 +98,15 @@ impl Runner for Day {
     }
 
     fn part2(input: &Self::Input<'_>) -> Result<usize> {
-        todo!()
+        let mut start = 50;
+        let mut count_zero = 0;
+        input.iter().for_each(|turn| {
+            let (new_start, passed) = dbg!(turn).rotate_pass_zero(start);
+            start = dbg!(new_start);
+            count_zero += dbg!(passed);
+        });
+
+        Ok(count_zero)
     }
 }
 
@@ -95,8 +133,17 @@ mod tests {
             part2 = 6;
     }
 
+    sample_case! {
+        sample2 => 
+            input = indoc::indoc! {"
+                L50
+            "};
+            part1 = 1;
+            part2 = 1;
+    }
+
     prod_case! {
-        part1 = 0;
+        part1 = 1105;
         part2 = 0;
     }
 }
