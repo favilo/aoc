@@ -3,6 +3,7 @@ use std::fs::read_to_string;
 use cpuprofiler::PROFILER;
 use criterion::profiler::Profiler;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use pprof::criterion::PProfProfiler;
 use pprof::{criterion::Output, flamegraph::Options};
 
 use aoc_utils::Runner;
@@ -65,7 +66,7 @@ fn custom() -> Criterion {
     // options.reverse_stack_order = true;
     options.color_diffusion = true;
 
-    Criterion::default().with_profiler(MyProfiler::new(pprof::criterion::PProfProfiler::new(
+    Criterion::default().with_profiler(MyProfiler::new(PProfProfiler::new(
         1000,
         // Output::Protobuf,
         Output::Flamegraph(Some(options)),
@@ -73,11 +74,11 @@ fn custom() -> Criterion {
 }
 
 struct MyProfiler<'a, 'b> {
-    pprof: pprof::criterion::PProfProfiler<'a, 'b>,
+    pprof: PProfProfiler<'a, 'b>,
 }
 
 impl<'a, 'b> MyProfiler<'a, 'b> {
-    fn new(pprof: pprof::criterion::PProfProfiler<'a, 'b>) -> Self {
+    fn new(pprof: PProfProfiler<'a, 'b>) -> Self {
         Self { pprof }
     }
 }
@@ -103,7 +104,7 @@ impl Profiler for MyProfiler<'_, '_> {
 }
 
 benches!(
-    // day01,
+    day01,
     // day02,
     // day03,
     // day04,
