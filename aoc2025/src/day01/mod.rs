@@ -23,23 +23,20 @@ impl Turn {
         let mut count = 0;
         match self.direction {
             Direction::Left => {
-                let mut value = start as isize - self.value as isize;
-                if value == 0 {
+                let mut after_rotation = start as isize - self.value as isize;
+                count = self.value / 100;
+                if start != 0 && (after_rotation < 0 || after_rotation == 0) {
                     count += 1;
                 }
-                while value < 0 {
-                    value += 100;
-                    count += 1;
-                }
-                (value.rem_euclid(100) as usize, count)
+                (after_rotation.rem_euclid(100) as usize, count)
             }
             Direction::Right => {
-                let mut value = start + self.value;
-                while value >= 100 {
-                    value -= 100;
+                let mut after_rotation = start + self.value;
+                count = self.value / 100;
+                if start != 0 && (after_rotation > 100 || after_rotation % 100 == 0) {
                     count += 1;
                 }
-                (value.rem_euclid(100), count)
+                (after_rotation.rem_euclid(100), count)
             }
         }
     }
@@ -134,12 +131,53 @@ mod tests {
     }
 
     sample_case! {
-        sample2 => 
+        sample_left_to_zero =>
             input = indoc::indoc! {"
                 L50
             "};
             part1 = 1;
             part2 = 1;
+    }
+
+    sample_case! {
+        sample_right_to_zero =>
+            input = indoc::indoc! {"
+                R50
+            "};
+            part1 = 1;
+            part2 = 1;
+    }
+
+    sample_case! {
+        sample_right_left =>
+            input = indoc::indoc! {"
+                R50
+                L400
+            "};
+            part1 = 2;
+            part2 = 5;
+    }
+
+    sample_case! {
+        sample_left_right =>
+            input = indoc::indoc! {"
+                L50
+                R400
+            "};
+            part1 = 2;
+            part2 = 5;
+    }
+
+    sample_case! {
+        sample_right_small_bits =>
+            input = indoc::indoc! {"
+                R50
+                L1
+                R2
+                L2
+            "};
+            part1 = 1;
+            part2 = 3;
     }
 
     prod_case! {
